@@ -1,17 +1,22 @@
 const VERSION = 'pathboard-v1';
 const SHELL = `${VERSION}-shell`;
 const RUNTIME = `${VERSION}-runtime`;
-const PRECACHE = ['/', '/index.html', '/manifest.webmanifest', '/favicon.svg', '/art/night-ascent-768.webp', '/art/night-ascent-1280.webp', '/art/night-ascent-1280.jpg', '/offline.html'];
+const PRECACHE = ['/', '/index.html', '/manifest.webmanifest', '/favicon.svg', '/art/night-ascent-768.avif', '/art/night-ascent-1280.avif', '/art/night-ascent-768.webp', '/art/night-ascent-1280.webp', '/art/night-ascent-1280.jpg', '/offline.html'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(SHELL).then((cache) => cache.addAll(PRECACHE)).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(Promise.all([
-    caches.keys().then((keys) => Promise.all(keys.filter((key) => ![SHELL, RUNTIME].includes(key)).map((key) => caches.delete(key)))),
-    self.clients.claim().then(() => self.clients.matchAll({ type: 'window' })).then((clients) => clients.forEach((client) => client.postMessage({ type: 'SW_UPDATED' })))
-  ]));
+  event.waitUntil(caches.keys().then(async (keys) => {
+    const oldKeys = keys.filter((key) => key.startsWith('pathboard-') && ![SHELL, RUNTIME].includes(key));
+    await Promise.all(oldKeys.map((key) => caches.delete(key)));
+    await self.clients.claim();
+    if (oldKeys.length) {
+      const clients = await self.clients.matchAll({ type: 'window' });
+      clients.forEach((client) => client.postMessage({ type: 'SW_UPDATED' }));
+    }
+  }));
 });
 
 self.addEventListener('fetch', (event) => {

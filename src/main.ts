@@ -70,7 +70,7 @@ function landingPage(): string {
         <ul class="plain-facts" aria-label="Product facts"><li>Works offline after the first visit.</li><li>Your map stays on this device.</li><li>One goal is free. Lifetime access costs $24.</li></ul>
       </div>
       <div class="hero-art">
-        <picture><source type="image/webp" srcset="/art/night-ascent-768.webp 768w, /art/night-ascent-1280.webp 1280w" sizes="(max-width: 760px) 100vw, 58vw"><img src="/art/night-ascent-1280.jpg" width="1280" height="853" fetchpriority="high" alt="A chain of warm trail lights climbs toward an observatory on a dark mountain ridge."></picture>
+        <picture><source type="image/avif" srcset="/art/night-ascent-768.avif 768w, /art/night-ascent-1280.avif 1280w" sizes="(max-width: 760px) 100vw, 58vw"><source type="image/webp" srcset="/art/night-ascent-768.webp 768w, /art/night-ascent-1280.webp 1280w" sizes="(max-width: 760px) 100vw, 58vw"><img src="/art/night-ascent-1280.jpg" width="1280" height="853" fetchpriority="high" alt="A chain of warm trail lights climbs toward an observatory on a dark mountain ridge."></picture>
         <div class="trail-note"><span>Next session</span><strong>Fraction arithmetic</strong><small>Nothing below it is still marked “Not yet.”</small></div>
       </div>
     </section>

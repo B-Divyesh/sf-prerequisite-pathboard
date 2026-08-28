@@ -52,7 +52,7 @@ With `prefers-reduced-motion: reduce`, transforms are removed, transitions becom
 ## Asset plan and provenance
 
 - `assets/src/night-ascent.png`: original wide cinematic environmental scene generated for this product. It contains a tiny distant observatory, layered dark ridges, sparse warm trail beacons, open sky, and no people or text.
-- `public/art/night-ascent-768.webp` and `night-ascent-1280.webp`: optimized responsive hero outputs.
+- `public/art/night-ascent-768.avif`, `night-ascent-1280.avif`, and matching WebP files: optimized responsive hero outputs with a JPEG fallback.
 - `public/social-card.jpg`: a 1200×630 crop derived from the same art with the interface adding no essential text inside the image.
 - App icons and favicon: hand-authored SVG trail-marker motif, rasterized locally for install icons.
 
