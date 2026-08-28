@@ -38,10 +38,27 @@ for (const route of ['/', '/demo', '/board', '/privacy', '/terms', '/404', '/def
     await expect(page.locator('main')).toHaveCount(1);
     await expect(page.locator('h1')).toHaveCount(1);
     const results = await new AxeBuilder({ page: page as never }).analyze();
-    expect(results.violations.filter((item) => ['serious', 'critical'].includes(item.impact ?? ''))).toEqual([]);
+    expect(results.violations).toEqual([]);
     expect(consoleErrors).toEqual([]);
   });
 }
+
+test('each route updates document and social metadata', async ({ page }) => {
+  for (const [route, title, description] of [
+    ['/', 'Prerequisite Pathboard — Map what to learn next', 'Map prerequisites backward and choose the next concept to repair.'],
+    ['/demo', 'Demo — Prerequisite Pathboard', 'Try a sample prerequisite map without saving changes to your real data.'],
+    ['/board', 'My map — Prerequisite Pathboard', 'Map your goal backward and choose the next prerequisite to repair.'],
+    ['/privacy', 'Privacy — Prerequisite Pathboard', 'How Prerequisite Pathboard keeps your map in this browser.'],
+    ['/terms', 'Terms — Prerequisite Pathboard', 'Terms for using Prerequisite Pathboard as a local planning aid.']
+  ] as const) {
+    await page.goto(route);
+    await expect(page).toHaveTitle(title);
+    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', title);
+    await expect(page.locator('meta[name="twitter:title"]')).toHaveAttribute('content', title);
+    await expect(page.locator('meta[property="og:description"]')).toHaveAttribute('content', description);
+    await expect(page.locator('meta[name="twitter:description"]')).toHaveAttribute('content', description);
+  }
+});
 
 test('keyboard opens, closes, and restores focus from the goal dialog', async ({ page }) => {
   await page.goto('/board');
@@ -53,6 +70,15 @@ test('keyboard opens, closes, and restores focus from the goal dialog', async ({
   await page.keyboard.press('Escape');
   await expect(page.getByRole('dialog')).not.toBeVisible();
   await expect(opener).toBeFocused();
+});
+
+test('the query-string demo entry is isolated and resettable', async ({ page }) => {
+  await page.goto('/?demo=1');
+  await expect(page).toHaveURL(/\?demo=1$/);
+  await expect(page.getByRole('complementary', { name: 'Demo mode' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Reset demo' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Start for real' })).toBeVisible();
+  await expect(page.locator('#next-title')).toHaveText('Fraction arithmetic');
 });
 
 test('invalid import gives one clear recovery step', async ({ page }) => {
@@ -74,7 +100,7 @@ test('does not expose an unavailable checkout endpoint', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByText('$24', { exact: true })).toHaveCount(0);
   await expect(page.locator('a[href*="api.sociobot.in"]')).toHaveCount(0);
-  await expect(page.getByRole('link', { name: 'Start your board' })).toHaveAttribute('href', '/board');
+  await expect(page.getByRole('link', { name: 'Start your map' })).toHaveAttribute('href', '/board');
 });
 
 test('@claim:repair-history shows every marked repair', async ({ page }) => {

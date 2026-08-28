@@ -2,27 +2,27 @@
 
 Map prerequisites backward and choose the next concept to repair.
 
-Prerequisite Pathboard is for adults rebuilding a technical subject. You add a goal, connect the ideas it depends on, and mark each concept as **Not yet**, **Can explain**, or **Can solve**. The board recommends one ready concept from only those links and statuses.
+Prerequisite Pathboard is for adults rebuilding a technical subject. You add a goal, connect the ideas it depends on, and mark each concept as **Not yet**, **Can explain**, or **Can solve**. The map recommends one ready concept from only those links and statuses.
 
 Live site: <https://prerequisite-pathboard.sociobot.in>
 
 ## Try the demo
 
-Open <https://prerequisite-pathboard.sociobot.in/demo> or run the app and visit `/demo`.
+Open <https://prerequisite-pathboard.sociobot.in/?demo=1> or run the app and visit `?demo=1`. The `/demo` URL also works.
 
-The demo loads a 14-concept calculus map. Its edits stay separate from your real board and disappear when you leave or reload. Use **Reset demo** to restore the sample.
+The demo loads a 14-concept calculus map. Its edits stay separate from your real map and disappear when you leave or reload. Use **Reset demo** to restore the sample.
 
 ## What ships
 
-- A dependency board and an accessible list view.
+- A dependency map and an accessible list view.
 - One next-session recommendation from entered dependencies and statuses.
-- Local storage in IndexedDB. The map stays on the device.
+- The map stays in this browser.
 - JSON and Markdown exports with every concept and dependency.
 - Invalid JSON imports are rejected with a recovery step.
-- Offline reload after the first visit through a service worker.
+- After one online visit, reopen the map without a connection.
 - Every goal, concept, repair entry, and export is included.
 
-This product does not generate a curriculum or diagnose mastery.
+The recommendation uses only the dependencies and statuses you enter.
 
 ## Develop
 
@@ -33,7 +33,7 @@ npm install
 npm run dev
 ```
 
-Vite serves the local site at the URL printed in the terminal. The real board uses a local IndexedDB database named `prerequisite-pathboard`.
+Vite serves the local site at the URL printed in the terminal. The real map uses a local IndexedDB database named `prerequisite-pathboard`.
 
 ## Test
 
@@ -44,7 +44,7 @@ npm test
 npm test -- --grep @claim:offline-reload
 ```
 
-Each promise in the interface and this README has a sandbox test in [.factory/claims.json](.factory/claims.json). Accessibility scans run on the landing, demo, privacy, and terms routes. A 390 px mobile path is included.
+Each visitor promise in the interface and this README has a sandbox test in [.factory/claims.json](.factory/claims.json). Accessibility scans run on the landing, demo, privacy, terms, and not-found routes at desktop and mobile sizes.
 
 ## Build and deploy
 
@@ -58,7 +58,7 @@ The service worker needs HTTPS in production. Localhost and `127.0.0.1` also all
 
 ## Data and privacy
 
-Real map data never goes to an app server. Demo state stays in page memory. There is no account system, analytics, or payment-provider code.
+Your map stays in this browser. Demo changes stay separate from your real map. This app makes no tracking requests.
 
 See [Privacy](https://prerequisite-pathboard.sociobot.in/privacy) and [Terms](https://prerequisite-pathboard.sociobot.in/terms).
 

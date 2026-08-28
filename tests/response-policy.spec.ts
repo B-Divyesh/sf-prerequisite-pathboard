@@ -16,3 +16,11 @@ test('static deployment policy serves a real 404 and immutable typed assets', as
   }
   expect(config.routes.filter((item) => ['/demo', '/board', '/privacy', '/terms'].includes(item.route)).every((item) => item.headers === undefined)).toBe(true);
 });
+
+test('static 404 matches the product shell and is not indexed', async () => {
+  const [notFound, sitemap] = await Promise.all([readFile('public/404.html', 'utf8'), readFile('public/sitemap.xml', 'utf8')]);
+  for (const required of ['Skip to main content', 'My map', 'Version 1.2', 'rel="canonical"', 'property="og:title"', 'name="twitter:title"', 'favicon.svg', 'apple-touch-icon.png']) {
+    expect(notFound).toContain(required);
+  }
+  expect(sitemap).not.toContain('/404');
+});

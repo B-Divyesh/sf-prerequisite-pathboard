@@ -14,17 +14,18 @@ let toastTimer = 0;
 
 const esc = (value: string): string => value.replace(/[&<>'"]/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[char]!);
 
-const routeInfo: Record<string, { title: string; description: string }> = {
-  '/': { title: 'Prerequisite Pathboard — Map what to learn next', description: 'Map a technical goal backward through its prerequisites, then choose one small concept to repair next.' },
-  '/demo': { title: 'Demo — Prerequisite Pathboard', description: 'Try a sample prerequisite map without saving changes to your real data.' },
-  '/board': { title: 'My board — Prerequisite Pathboard', description: 'Map your goal backward and choose the next prerequisite to repair.' },
-  '/privacy': { title: 'Privacy — Prerequisite Pathboard', description: 'How Prerequisite Pathboard stores your map on your device.' },
-  '/terms': { title: 'Terms — Prerequisite Pathboard', description: 'Terms for using Prerequisite Pathboard as a local planning aid.' },
-  '/404': { title: 'Page not found — Prerequisite Pathboard', description: 'This path does not exist.' }
+const routeInfo: Record<string, { title: string; description: string; socialTitle: string; socialDescription: string }> = {
+  '/': { title: 'Prerequisite Pathboard — Map what to learn next', description: 'Map a technical goal backward through its prerequisites, then choose one small concept to repair next.', socialTitle: 'Prerequisite Pathboard — Map what to learn next', socialDescription: 'Map prerequisites backward and choose the next concept to repair.' },
+  '/demo': { title: 'Demo — Prerequisite Pathboard', description: 'Try a sample prerequisite map without saving changes to your real data.', socialTitle: 'Demo — Prerequisite Pathboard', socialDescription: 'Try a sample prerequisite map without saving changes to your real data.' },
+  '/board': { title: 'My map — Prerequisite Pathboard', description: 'Map your goal backward and choose the next prerequisite to repair.', socialTitle: 'My map — Prerequisite Pathboard', socialDescription: 'Map your goal backward and choose the next prerequisite to repair.' },
+  '/privacy': { title: 'Privacy — Prerequisite Pathboard', description: 'How Prerequisite Pathboard keeps your map in this browser.', socialTitle: 'Privacy — Prerequisite Pathboard', socialDescription: 'How Prerequisite Pathboard keeps your map in this browser.' },
+  '/terms': { title: 'Terms — Prerequisite Pathboard', description: 'Terms for using Prerequisite Pathboard as a local planning aid.', socialTitle: 'Terms — Prerequisite Pathboard', socialDescription: 'Terms for using Prerequisite Pathboard as a local planning aid.' },
+  '/404': { title: 'Page not found — Prerequisite Pathboard', description: 'This path does not exist.', socialTitle: 'Page not found — Prerequisite Pathboard', socialDescription: 'This path does not exist.' }
 };
 
 function currentPath(): string {
   const path = location.pathname.replace(/\/+$/, '') || '/';
+  if (new URLSearchParams(location.search).get('demo') === '1') return '/demo';
   return routeInfo[path] ? path : '/404';
 }
 
@@ -33,6 +34,10 @@ function setMetadata(path: string): void {
   document.title = info.title;
   document.querySelector<HTMLMetaElement>('meta[name="description"]')!.content = info.description;
   document.querySelector<HTMLLinkElement>('link[rel="canonical"]')!.href = `https://prerequisite-pathboard.sociobot.in${path === '/' ? '/' : path}`;
+  document.querySelector<HTMLMetaElement>('meta[property="og:title"]')!.content = info.socialTitle;
+  document.querySelector<HTMLMetaElement>('meta[property="og:description"]')!.content = info.socialDescription;
+  document.querySelector<HTMLMetaElement>('meta[name="twitter:title"]')!.content = info.socialTitle;
+  document.querySelector<HTMLMetaElement>('meta[name="twitter:description"]')!.content = info.socialDescription;
 }
 
 function header(): string {
@@ -40,7 +45,7 @@ function header(): string {
     <header class="site-header">
       <a class="wordmark" href="/" data-nav aria-label="Prerequisite Pathboard home"><span class="route-mark" aria-hidden="true">⌁</span> Pathboard</a>
       <nav aria-label="Main navigation">
-        <a href="/demo" data-nav>Demo</a><a href="/board" data-nav>My board</a><a href="/privacy" data-nav>Privacy</a>
+        <a href="/demo" data-nav>Demo</a><a href="/board" data-nav>My map</a><a href="/privacy" data-nav>Privacy</a>
       </nav>
       <span class="network-state" data-network>${navigator.onLine ? 'Online' : 'Offline'}</span>
     </header>`;
@@ -50,7 +55,7 @@ function footer(): string {
   return `<footer class="site-footer">
     <p><strong>Prerequisite Pathboard</strong><br><span>Map backward. Choose one repair.</span></p>
     <nav aria-label="Footer navigation"><a href="/privacy" data-nav>Privacy</a><a href="/terms" data-nav>Terms</a><a href="https://hello-factory.sociobot.in" target="_blank" rel="noreferrer">Built by Param Factory <span class="sr-only">(opens in a new tab)</span></a></nav>
-    <p class="build-id">Version 1.1 · Original generated artwork</p>
+    <p class="build-id">Version 1.2 · Original generated artwork</p>
   </footer>`;
 }
 
@@ -65,7 +70,7 @@ function landingPage(): string {
         <p class="eyebrow">A map for relearning</p>
         <h1 tabindex="-1">Map backward. Learn the next prerequisite.</h1>
         <p class="hero-intro">For adults rebuilding technical knowledge who need one clear concept to work on next.</p>
-        <div class="hero-action"><a class="button primary" href="/demo" data-nav>Try it with sample data</a><span>Opens an isolated 14-concept calculus map.</span></div>
+        <div class="hero-action"><a class="button primary" href="/?demo=1" data-nav>Try it with sample data</a><span>Opens an isolated 14-concept calculus map.</span></div>
         <ul class="plain-facts" aria-label="Product facts"><li>Works offline after the first visit.</li><li>Your map stays on this device.</li><li>Every goal, concept, and export is included.</li></ul>
       </div>
       <div class="hero-art">
@@ -75,8 +80,8 @@ function landingPage(): string {
     </section>
 
     <section class="preview-section" aria-labelledby="preview-title">
-      <div class="section-heading"><p class="eyebrow">See the structure</p><h2 id="preview-title">A route you wrote, not a prescribed course</h2><p>Every line comes from a dependency you enter. Statuses help the board find the first unresolved step.</p></div>
-      <div class="mini-board" aria-label="Example prerequisite path">
+      <div class="section-heading"><p class="eyebrow">See the structure</p><h2 id="preview-title">A map you wrote, not a prescribed course</h2><p>Every line comes from a dependency you enter. Statuses help the map find the first unresolved step.</p></div>
+      <div class="mini-board" role="group" aria-label="Example prerequisite path">
         <div class="mini-node ready">Fraction arithmetic <span>Not yet</span></div><span class="mini-edge" aria-hidden="true">→</span>
         <div class="mini-node">Algebraic simplification <span>Not yet</span></div><span class="mini-edge" aria-hidden="true">→</span>
         <div class="mini-node known">Difference quotients <span>Can explain</span></div><span class="mini-edge" aria-hidden="true">→</span>
@@ -84,13 +89,13 @@ function landingPage(): string {
       </div>
     </section>
 
-    <section class="steps" aria-labelledby="steps-title"><div class="section-heading"><p class="eyebrow">How it works</p><h2 id="steps-title">Build the route in three moves</h2></div>
-      <ol><li><span>01</span><h3>Name the goal</h3><p>Write the exact idea or problem you want to handle.</p></li><li><span>02</span><h3>Work backward</h3><p>Add only the concepts your goal depends on.</p></li><li><span>03</span><h3>Mark and choose</h3><p>Update each status. The board points to one ready repair.</p></li></ol>
+    <section class="steps" aria-labelledby="steps-title"><div class="section-heading"><p class="eyebrow">How it works</p><h2 id="steps-title">Build the map in three moves</h2></div>
+      <ol><li><span>01</span><h3>Name the goal</h3><p>Write the exact idea or problem you want to handle.</p></li><li><span>02</span><h3>Work backward</h3><p>Add only the concepts your goal depends on.</p></li><li><span>03</span><h3>Mark and choose</h3><p>Update each status. The map points to one ready repair.</p></li></ol>
     </section>
 
-    <section class="limits" aria-labelledby="limits-title"><div><p class="eyebrow">Clear boundaries</p><h2 id="limits-title">A reasoning aid, not a diagnosis</h2></div><div><p>The board does not generate a curriculum or predict mastery. It uses only the dependencies and statuses you enter.</p><p>Export every concept and connection as JSON or Markdown. No account is required.</p></div></section>
+    <section class="limits" aria-labelledby="limits-title"><div><p class="eyebrow">Clear boundaries</p><h2 id="limits-title">A reasoning aid for your own map</h2></div><div><p>The recommendation uses only the dependencies and statuses you enter.</p><p>Export every concept and connection as JSON or Markdown. No account is required.</p></div></section>
 
-    <section class="pricing" aria-labelledby="pricing-title"><div><p class="eyebrow">Keep the map for the long term</p><h2 id="pricing-title">The whole pathboard is included</h2><p>Add every goal and concept you need. Offline use, list view, repair history, and both exports are included.</p></div><div class="price-panel"><p>Your map remains local to this browser.</p><a class="button primary" href="/board" data-nav>Start your board</a><small>Export JSON or Markdown whenever you want a copy.</small></div></section>
+    <section class="pricing" aria-labelledby="pricing-title"><div><p class="eyebrow">Keep the map for the long term</p><h2 id="pricing-title">Use the full map without limits</h2><p>Add every goal and concept you need. Offline use, list view, repair history, and both exports are included.</p></div><div class="price-panel"><p>Your map remains local to this browser.</p><a class="button primary" href="/board" data-nav>Start your map</a><small>Export JSON or Markdown whenever you want a copy.</small></div></section>
   </main>`);
 }
 
@@ -117,7 +122,7 @@ function appPage(): string {
 }
 
 function emptyWorkspace(): string {
-  return `<section class="empty-workspace" aria-labelledby="empty-title"><div class="empty-trail" aria-hidden="true"><i></i><i></i><i></i></div><div><h2 id="empty-title">Your first route starts with a goal</h2><p>Goals and their prerequisites will appear here. Name one idea you want to explain or solve.</p><button class="button primary" type="button" data-add-goal>Add your first goal</button><button class="text-button" type="button" data-load-sample>Load sample map instead</button></div></section>`;
+  return `<section class="empty-workspace" aria-labelledby="empty-title"><div class="empty-trail" aria-hidden="true"><i></i><i></i><i></i></div><div><h2 id="empty-title">Your first map starts with a goal</h2><p>Goals and their prerequisites will appear here. Name one idea you want to explain or solve.</p><button class="button primary" type="button" data-add-goal>Add your first goal</button><button class="text-button" type="button" data-load-sample>Load sample map instead</button></div></section>`;
 }
 
 function boardWorkspace(goal: Concept, next: Concept | null): string {
@@ -132,8 +137,8 @@ function boardWorkspace(goal: Concept, next: Concept | null): string {
     </div>
     <section class="path-area" aria-label="Prerequisite map">
       ${view === 'board' ? graphView(goal.id, next?.id ?? null) : listView(goal.id, next?.id ?? null)}
-      ${selectedPanel()}
     </section>
+    ${selectedPanel()}
     ${state.repairs.length ? `<details class="repair-log"><summary>${state.repairs.length} marked repair${state.repairs.length === 1 ? '' : 's'}</summary><ol>${state.repairs.slice().reverse().map((item) => `<li><span>${esc(item.conceptTitle)}</span><span>${statusLabel[item.status]}</span><time datetime="${item.at}">${new Date(item.at).toLocaleDateString()}</time></li>`).join('')}</ol></details>` : ''}`;
 }
 
@@ -176,9 +181,9 @@ function listView(goalId: string, nextId: string | null): string {
 
 function selectedPanel(): string {
   const item = state.concepts.find((concept) => concept.id === selectedId);
-  if (!item) return `<aside class="selected-panel"><p class="eyebrow">Concept details</p><h2>Select a concept</h2><p>Open any trail marker to edit its status, title, or notes.</p></aside>`;
+  if (!item) return `<div class="selected-panel"><p class="eyebrow">Concept details</p><h2 id="details-title">Select a concept</h2><p>Open any trail marker to edit its status, title, or notes.</p></div>`;
   const prerequisites = state.edges.filter((edge) => edge.dependentId === item.id).map((edge) => state.concepts.find((concept) => concept.id === edge.prerequisiteId)).filter(Boolean) as Concept[];
-  return `<aside class="selected-panel"><p class="eyebrow">${item.kind === 'goal' ? 'Goal' : 'Concept'}</p><h2>${esc(item.title)}</h2><p>${item.notes ? esc(item.notes) : 'No notes yet.'}</p><dl><div><dt>Status</dt><dd>${statusLabel[item.status]}</dd></div><div><dt>Prerequisites</dt><dd>${prerequisites.length ? prerequisites.map((concept) => esc(concept.title)).join(', ') : 'None entered'}</dd></div></dl><div class="panel-actions"><button class="button primary" type="button" data-edit="${item.id}">Edit concept</button><button class="button secondary" type="button" data-add-prerequisite="${item.id}">Add prerequisite</button></div></aside>`;
+  return `<div class="selected-panel"><p class="eyebrow">${item.kind === 'goal' ? 'Goal' : 'Concept'}</p><h2 id="details-title">${esc(item.title)}</h2><p>${item.notes ? esc(item.notes) : 'No notes yet.'}</p><dl><div><dt>Status</dt><dd>${statusLabel[item.status]}</dd></div><div><dt>Prerequisites</dt><dd>${prerequisites.length ? prerequisites.map((concept) => esc(concept.title)).join(', ') : 'None entered'}</dd></div></dl><div class="panel-actions"><button class="button primary" type="button" data-edit="${item.id}">Edit concept</button><button class="button secondary" type="button" data-add-prerequisite="${item.id}">Add prerequisite</button></div></div>`;
 }
 
 function conceptDialog(): string {
@@ -195,15 +200,15 @@ function exportDialog(): string {
 }
 
 function privacyPage(): string {
-  return shell(`<main id="main" class="prose-page"><p class="eyebrow">Privacy</p><h1 tabindex="-1">Your map stays on your device</h1><p class="lede">Prerequisite Pathboard has no account system, ads, or analytics.</p><h2>What is stored</h2><p>Your real pathboard is stored in your browser’s IndexedDB database. Demo edits stay in memory and disappear when you leave or reload.</p><h2>What is sent</h2><p>Your concepts, notes, statuses, and exported files are never sent by this app.</p><h2>What you control</h2><p>You can export your map as JSON or Markdown. Clear this site’s browser storage to remove local data.</p><p>Effective: August 28, 2026. Questions: <a href="mailto:privacy@sociobot.in">privacy@sociobot.in</a></p></main>`);
+  return shell(`<main id="main" class="prose-page"><p class="eyebrow">Privacy</p><h1 tabindex="-1">Your map stays on your device</h1><p class="lede">You can create a real map without an account.</p><h2>What is stored</h2><p>Your real map stays in this browser. Demo edits are separate and disappear when you leave or reload.</p><h2>What is sent</h2><p>Your concepts, notes, statuses, and exported files are never sent by this app.</p><h2>Tracking</h2><p>This app makes no tracking requests.</p><h2>What you control</h2><p>You can export your map as JSON or Markdown. Clear this site’s browser storage to remove local data.</p><p>Effective: August 28, 2026. Questions: <a href="mailto:privacy@sociobot.in">privacy@sociobot.in</a></p></main>`);
 }
 
 function termsPage(): string {
-  return shell(`<main id="main" class="prose-page"><p class="eyebrow">Terms</p><h1 tabindex="-1">Use the board as a planning aid</h1><p class="lede">Prerequisite Pathboard helps you record your own learning dependencies. It does not diagnose knowledge or promise results.</p><h2>Using the product</h2><p>You are responsible for the concepts and links you enter. Keep exports if the map matters to you. Browser data can be lost when storage is cleared.</p><h2>Availability</h2><p>The software is provided as is, without a guarantee of uninterrupted availability. You retain ownership of the map you create.</p><p>Effective: August 28, 2026. Questions: <a href="mailto:support@sociobot.in">support@sociobot.in</a></p></main>`);
+  return shell(`<main id="main" class="prose-page"><p class="eyebrow">Terms</p><h1 tabindex="-1">Use the map as a planning aid</h1><p class="lede">Prerequisite Pathboard helps you record your own learning dependencies.</p><h2>Using the product</h2><p>You are responsible for the concepts and links you enter. Keep exports if the map matters to you. Browser data can be lost when storage is cleared.</p><h2>Availability</h2><p>The software is provided as is, without a guarantee of uninterrupted availability. You retain ownership of the map you create.</p><p>Effective: August 28, 2026. Questions: <a href="mailto:support@sociobot.in">support@sociobot.in</a></p></main>`);
 }
 
 function notFoundPage(): string {
-  return shell(`<main id="main" class="not-found"><p class="eyebrow">Trail marker 404</p><h1 tabindex="-1">This path ends here</h1><p>The page may have moved. Your saved map is not affected.</p><a class="button primary" href="/" data-nav>Return to the pathboard</a></main>`);
+  return shell(`<main id="main" class="not-found"><p class="eyebrow">Trail marker 404</p><h1 tabindex="-1">This path ends here</h1><p>The page may have moved. Your saved map is not affected.</p><a class="button primary" href="/" data-nav>Return to the map</a></main>`);
 }
 
 async function render(focusHeading = false): Promise<void> {
@@ -235,9 +240,11 @@ async function render(focusHeading = false): Promise<void> {
   }
 }
 
-function navigate(path: string): void {
-  if (isDemo && path !== '/demo') state = emptyBoard();
-  history.pushState({}, '', path);
+function navigate(url: string): void {
+  const target = new URL(url, location.origin);
+  const nextPath = target.searchParams.get('demo') === '1' ? '/demo' : target.pathname;
+  if (isDemo && nextPath !== '/demo') state = emptyBoard();
+  history.pushState({}, '', `${target.pathname}${target.search}`);
   void render(true);
 }
 
@@ -289,7 +296,7 @@ function download(content: string, filename: string, type: string): void {
 function bindEvents(): void {
   document.querySelectorAll<HTMLElement>('[data-nav]').forEach((element) => element.addEventListener('click', (event) => {
     if (!(event.currentTarget instanceof HTMLAnchorElement) || event.currentTarget.origin !== location.origin) return;
-    event.preventDefault(); navigate(event.currentTarget.pathname);
+    event.preventDefault(); navigate(`${event.currentTarget.pathname}${event.currentTarget.search}`);
   }));
   document.querySelectorAll<HTMLButtonElement>('[data-add-goal]').forEach((button) => button.addEventListener('click', () => openConceptDialog('goal')));
   document.querySelectorAll<HTMLButtonElement>('[data-add-prerequisite]').forEach((button) => button.addEventListener('click', () => openConceptDialog('concept', button.dataset.addPrerequisite || selectedId || state.activeGoalId || '')));

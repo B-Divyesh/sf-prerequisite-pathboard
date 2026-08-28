@@ -17,9 +17,9 @@ test('@claim:import-error rejects a cyclic import before persistence and recover
   await page.goto('/board');
   await page.locator('[data-import]').setInputFiles({ name: 'cyclic.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(cyclic)) });
   await expect(page.getByRole('status')).toContainText('contains a prerequisite loop');
-  await expect(page.getByRole('heading', { name: 'Your first route starts with a goal' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Your first map starts with a goal' })).toBeVisible();
   await page.reload();
-  await expect(page.getByRole('heading', { name: 'Your first route starts with a goal' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Your first map starts with a goal' })).toBeVisible();
 
   const valid = { ...cyclic, name: 'Recovered board', edges: [cyclic.edges[0]] };
   await page.locator('[data-import]').setInputFiles({ name: 'valid.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(valid)) });
@@ -32,5 +32,5 @@ test('malformed repair entries are rejected before persistence', async ({ page }
   await page.goto('/board');
   await page.locator('[data-import]').setInputFiles({ name: 'bad-repair.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(malformed)) });
   await expect(page.getByRole('status')).toContainText('repair entry is incomplete');
-  await expect(page.getByRole('heading', { name: 'Your first route starts with a goal' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Your first map starts with a goal' })).toBeVisible();
 });

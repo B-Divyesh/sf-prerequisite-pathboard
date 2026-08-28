@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
 
 const stamp = '2026-08-28T12:00:00.000Z';
 const concept = (id: string, title: string, kind: 'goal' | 'concept' = 'concept') => ({ id, title, notes: '', kind, status: 'not_yet', createdAt: stamp, updatedAt: stamp });
@@ -32,7 +33,22 @@ test('@claim:local-only sends real notes and exports nowhere else', async ({ pag
   expect(external).toEqual([]);
 });
 
-test('@claim:demo-sandbox discards demo edits on exit and reload', async ({ page }) => {
+test('@claim:demo-sandbox discards demo edits without changing the real IndexedDB record', async ({ page }) => {
+  await page.goto('/board');
+  await page.getByRole('button', { name: 'Add your first goal' }).click();
+  await page.getByLabel('Concept title').fill('Real map stays unchanged');
+  await page.getByRole('button', { name: 'Save concept' }).click();
+  const readStoredTitle = () => page.evaluate(async () => new Promise<string | undefined>((resolve, reject) => {
+    const request = indexedDB.open('prerequisite-pathboard', 1);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => {
+      const tx = request.result.transaction('boards', 'readonly');
+      const read = tx.objectStore('boards').get('primary');
+      read.onerror = () => reject(read.error);
+      read.onsuccess = () => resolve(read.result?.concepts?.[0]?.title);
+    };
+  }));
+  await expect.poll(readStoredTitle).toBe('Real map stays unchanged');
   await page.goto('/demo');
   await page.getByRole('button', { name: /^Fraction arithmetic, Not yet/ }).click();
   await page.getByRole('button', { name: 'Edit concept' }).click();
@@ -41,8 +57,9 @@ test('@claim:demo-sandbox discards demo edits on exit and reload', async ({ page
   await page.reload();
   await expect(page.getByText('Changed only in demo')).toHaveCount(0);
   await page.getByRole('link', { name: 'Start for real' }).click();
-  await expect(page.getByRole('heading', { name: 'Your first route starts with a goal' })).toBeVisible();
+  await expect(page.getByRole('button', { name: /Real map stays unchanged/ })).toBeVisible();
   await expect(page.getByText('Changed only in demo')).toHaveCount(0);
+  await expect.poll(readStoredTitle).toBe('Real map stays unchanged');
 });
 
 test('@claim:json-export exports every sample concept and dependency', async ({ page }) => {
@@ -79,6 +96,43 @@ test('@claim:dependency-recommendation updates from entered links and statuses',
   await page.getByRole('radio', { name: 'Can explain' }).check();
   await page.getByRole('button', { name: 'Save concept' }).click();
   await expect(page.locator('#next-title')).toHaveText('Approaching a value');
+});
+
+test('@claim:rendered-edges renders only dependencies the visitor enters', async ({ page }) => {
+  await page.goto('/board');
+  await page.getByRole('button', { name: 'Add your first goal' }).click();
+  await page.getByLabel('Concept title').fill('Explain vectors');
+  await page.getByRole('button', { name: 'Save concept' }).click();
+  await page.getByRole('button', { name: 'Add prerequisite' }).first().click();
+  await page.getByLabel('Concept title').fill('Vector addition');
+  await page.getByRole('button', { name: 'Save concept' }).click();
+  await expect(page.locator('.graph-stage path')).toHaveCount(1);
+  await page.getByRole('button', { name: 'Export map' }).click();
+  const firstDownload = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Export JSON' }).click();
+  const firstPath = await (await firstDownload).path();
+  expect(JSON.parse(await readFile(firstPath!, 'utf8')).edges).toHaveLength(1);
+  page.on('dialog', (dialog) => dialog.accept());
+  await page.getByRole('button', { name: /^Vector addition/ }).click();
+  await page.getByRole('button', { name: 'Edit concept' }).click();
+  await page.getByRole('button', { name: 'Delete this concept' }).click();
+  await expect(page.locator('.graph-stage path')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Export map' }).click();
+  const secondDownload = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Export JSON' }).click();
+  const secondPath = await (await secondDownload).path();
+  expect(JSON.parse(await readFile(secondPath!, 'utf8')).edges).toHaveLength(0);
+});
+
+test('@claim:no-tracking makes no tracking requests or embeds', async ({ page }) => {
+  const requests: string[] = [];
+  page.on('request', (request) => requests.push(request.url()));
+  await page.goto('/');
+  await page.getByRole('link', { name: 'Try it with sample data' }).click();
+  await page.getByRole('link', { name: 'Start for real' }).click();
+  expect(requests.every((url) => new URL(url).origin === 'http://127.0.0.1:4173')).toBe(true);
+  const source = await Promise.all(['index.html', 'src/main.ts', 'src/storage.ts'].map((file) => readFile(file, 'utf8')));
+  expect(source.join('\n')).not.toMatch(/google-analytics|googletagmanager|analytics\.track|stripe\.com|checkout\.js/i);
 });
 
 test('@claim:all-features-included imports multiple goals and more than 25 concepts', async ({ page }) => {
