@@ -37,7 +37,11 @@ Completed on 2026-08-28 UTC:
 
 ## Deployment
 
-Build output remains the required static `dist/` directory. `public/staticwebapp.config.json` is copied into it and is the deployment configuration. Push the committed `main` branch through the factory static deployment pipeline, then verify `/`, `/demo`, `/board`, `/privacy`, `/terms`, an unknown path (HTTP 404), an AVIF response (`image/avif`), and immutable asset headers on the live URL.
+- Pushed `main` through `677f2d1a088f3c7466cb49e7b00ae677dce289bd`.
+- Factory static deployment completed on 2026-08-28 UTC: deployment ID `44e1e999-4df5-4f3c-9a5a-cac9294c1c08`, existing app `sf-prerequisite-pathboard`, default host `victorious-dune-000083b10.7.azurestaticapps.net`, and live custom URL <https://prerequisite-pathboard.sociobot.in>.
+- Live identity: `dist/index.html` and live `/` SHA-256 both `e71c535f66b9cb406bcea5ee680738e3718806d444de5fc6c2097171d304aa49`; local and live `service-worker.js` both `5ab5e46d507e2566fe2a44ce79803a88df4a255f4a1a2f4f0646d363873d896e`.
+- Live response policy: an unknown route returns HTTP 404 with the styled not-found title; the built JS returns `Cache-Control: public, max-age=31536000, immutable`; the hero AVIF returns `Content-Type: image/avif` with the same immutable cache policy.
+- Live `verify-url.sh` passed for `/` (661 ms) and `/demo` (576 ms): title, `lang`, one `h1`, `main`, image alt, button labels, and console/page errors all passed.
 
 ## Known deviation
 
