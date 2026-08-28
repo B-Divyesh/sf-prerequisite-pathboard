@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
-test('@claim:refresh-persistence real board survives reload', async ({ page }) => {
+test('@claim:refresh-persistence real board survives refresh and tab close', async ({ page, context }) => {
   await page.goto('/board');
   await page.getByRole('button', { name: 'Add your first goal' }).click();
   await page.getByLabel('Concept title').fill('Understand eigenvectors');
@@ -16,6 +16,11 @@ test('@claim:refresh-persistence real board survives reload', async ({ page }) =
   await page.reload();
   await expect(page.getByRole('button', { name: /Understand eigenvectors/ })).toBeVisible();
   await expect(page.getByRole('button', { name: /Matrix multiplication/ })).toBeVisible();
+  const reopened = await context.newPage();
+  await page.close();
+  await reopened.goto('/board');
+  await expect(reopened.getByRole('button', { name: /Understand eigenvectors/ })).toBeVisible();
+  await expect(reopened.getByRole('button', { name: /Matrix multiplication/ })).toBeVisible();
 });
 
 test('@claim:list-view shows the complete sample in a linear view', async ({ page }) => {
@@ -25,7 +30,7 @@ test('@claim:list-view shows the complete sample in a linear view', async ({ pag
   await expect(page.getByRole('heading', { name: 'Direct prerequisites' })).toBeVisible();
 });
 
-for (const route of ['/', '/demo', '/privacy', '/terms']) {
+for (const route of ['/', '/demo', '/board', '/privacy', '/terms', '/404', '/definitely-not-a-real-route-qa']) {
   test(`accessibility smoke test for ${route}`, async ({ page }) => {
     const consoleErrors: string[] = [];
     page.on('console', (message) => { if (message.type() === 'error') consoleErrors.push(message.text()); });
@@ -38,21 +43,22 @@ for (const route of ['/', '/demo', '/privacy', '/terms']) {
   });
 }
 
-test('@claim:import-error invalid import gives one clear recovery step', async ({ page }) => {
+test('keyboard opens, closes, and restores focus from the goal dialog', async ({ page }) => {
+  await page.goto('/board');
+  const opener = page.getByRole('button', { name: 'Add your first goal' });
+  await opener.focus();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(page.getByLabel('Concept title')).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('dialog')).not.toBeVisible();
+  await expect(opener).toBeFocused();
+});
+
+test('invalid import gives one clear recovery step', async ({ page }) => {
   await page.goto('/board');
   await page.locator('[data-import]').setInputFiles({ name: 'bad.json', mimeType: 'application/json', buffer: Buffer.from('{"hello":true}') });
   await expect(page.getByRole('status')).toContainText('Choose a Pathboard JSON export');
-});
-
-test('@claim:license-restore verifies a pasted license', async ({ page }) => {
-  await page.route('https://api.sociobot.in/api/v1/products/prerequisite-pathboard/verify?license=fixture-license', (route) => route.fulfill({ status: 200, contentType: 'application/json', body: '{"valid":true,"reason":"ok"}' }));
-  await page.goto('/');
-  await page.getByRole('button', { name: 'Have a license? Paste it' }).click();
-  await page.getByLabel('License token').fill('fixture-license');
-  await page.getByRole('button', { name: 'Verify license' }).click();
-  await expect(page.getByRole('status')).toContainText('Lifetime access restored');
-  await page.goto('/board');
-  await expect(page.getByText(/Free board:/)).toHaveCount(0);
 });
 
 test('@claim:account-free creates a real goal without sign-in', async ({ page }) => {
@@ -64,12 +70,14 @@ test('@claim:account-free creates a real goal without sign-in', async ({ page })
   await expect(page.getByRole('button', { name: /Understand vectors/ })).toBeVisible();
 });
 
-test('@claim:paid-history shows repairs beyond the free history window', async ({ page }) => {
+test('does not expose an unavailable checkout endpoint', async ({ page }) => {
   await page.goto('/');
-  await page.evaluate(() => {
-    localStorage.setItem('sb_license:prerequisite-pathboard', 'history-fixture');
-    localStorage.setItem('sb_license_verdict:prerequisite-pathboard', JSON.stringify({ valid: true, checkedAt: Date.now() }));
-  });
+  await expect(page.getByText('$24', { exact: true })).toHaveCount(0);
+  await expect(page.locator('a[href*="api.sociobot.in"]')).toHaveCount(0);
+  await expect(page.getByRole('link', { name: 'Start your board' })).toHaveAttribute('href', '/board');
+});
+
+test('@claim:repair-history shows every marked repair', async ({ page }) => {
   await page.goto('/board');
   await page.getByRole('button', { name: 'Load sample map instead' }).click();
   await page.getByRole('button', { name: /^Fraction arithmetic, Not yet/ }).click();

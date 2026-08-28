@@ -20,8 +20,7 @@ The demo loads a 14-concept calculus map. Its edits stay separate from your real
 - JSON and Markdown exports with every concept and dependency.
 - Invalid JSON imports are rejected with a recovery step.
 - Offline reload after the first visit through a service worker.
-- A free board with one goal and up to 25 concepts.
-- A $24 one-time license for unlimited goals, unlimited concepts, and full repair history.
+- Every goal, concept, repair entry, and export is included.
 
 This product does not generate a curriculum or diagnose mastery.
 
@@ -57,11 +56,9 @@ The exact deploy command is `npm run build`. It creates `dist/` with `dist/index
 
 The service worker needs HTTPS in production. Localhost and `127.0.0.1` also allow it for development and tests.
 
-## Data and licenses
+## Data and privacy
 
-Real map data never goes to an app server. Demo state stays in page memory. License tokens use `localStorage` and go only to the Sociobot billing API for verification. Checkout also runs through Sociobot; no payment provider code is embedded here.
-
-Users can paste and verify a license on a new device.
+Real map data never goes to an app server. Demo state stays in page memory. There is no account system, analytics, or payment-provider code.
 
 See [Privacy](https://prerequisite-pathboard.sociobot.in/privacy) and [Terms](https://prerequisite-pathboard.sociobot.in/terms).
 

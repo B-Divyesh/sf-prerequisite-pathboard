@@ -3,7 +3,6 @@ import { sampleBoard } from './sample';
 import { emptyBoard, type BoardState, type Concept, type KnowledgeStatus } from './types';
 import { ancestors, depthFromGoal, recommendation, statusLabel, toMarkdown, uid, validateBoard, wouldCreateCycle } from './model';
 import { loadBoard, saveBoard } from './storage';
-import { BUY_URL, captureLicense, clearLicense, hasPaidLicense, storeLicense, verifyLicense } from './license';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 let state: BoardState = emptyBoard();
@@ -19,8 +18,8 @@ const routeInfo: Record<string, { title: string; description: string }> = {
   '/': { title: 'Prerequisite Pathboard — Map what to learn next', description: 'Map a technical goal backward through its prerequisites, then choose one small concept to repair next.' },
   '/demo': { title: 'Demo — Prerequisite Pathboard', description: 'Try a sample prerequisite map without saving changes to your real data.' },
   '/board': { title: 'My board — Prerequisite Pathboard', description: 'Map your goal backward and choose the next prerequisite to repair.' },
-  '/privacy': { title: 'Privacy — Prerequisite Pathboard', description: 'How Prerequisite Pathboard stores your map and license on your device.' },
-  '/terms': { title: 'Terms — Prerequisite Pathboard', description: 'Terms for using Prerequisite Pathboard and its one-time license.' },
+  '/privacy': { title: 'Privacy — Prerequisite Pathboard', description: 'How Prerequisite Pathboard stores your map on your device.' },
+  '/terms': { title: 'Terms — Prerequisite Pathboard', description: 'Terms for using Prerequisite Pathboard as a local planning aid.' },
   '/404': { title: 'Page not found — Prerequisite Pathboard', description: 'This path does not exist.' }
 };
 
@@ -51,7 +50,7 @@ function footer(): string {
   return `<footer class="site-footer">
     <p><strong>Prerequisite Pathboard</strong><br><span>Map backward. Choose one repair.</span></p>
     <nav aria-label="Footer navigation"><a href="/privacy" data-nav>Privacy</a><a href="/terms" data-nav>Terms</a><a href="https://hello-factory.sociobot.in" target="_blank" rel="noreferrer">Built by Param Factory <span class="sr-only">(opens in a new tab)</span></a></nav>
-    <p class="build-id">Version 1.0 · Original generated artwork</p>
+    <p class="build-id">Version 1.1 · Original generated artwork</p>
   </footer>`;
 }
 
@@ -67,7 +66,7 @@ function landingPage(): string {
         <h1 tabindex="-1">Map backward. Learn the next prerequisite.</h1>
         <p class="hero-intro">For adults rebuilding technical knowledge who need one clear concept to work on next.</p>
         <div class="hero-action"><a class="button primary" href="/demo" data-nav>Try it with sample data</a><span>Opens an isolated 14-concept calculus map.</span></div>
-        <ul class="plain-facts" aria-label="Product facts"><li>Works offline after the first visit.</li><li>Your map stays on this device.</li><li>One goal is free. Lifetime access costs $24.</li></ul>
+        <ul class="plain-facts" aria-label="Product facts"><li>Works offline after the first visit.</li><li>Your map stays on this device.</li><li>Every goal, concept, and export is included.</li></ul>
       </div>
       <div class="hero-art">
         <picture><source type="image/avif" srcset="/art/night-ascent-768.avif 768w, /art/night-ascent-1280.avif 1280w" sizes="(max-width: 760px) 100vw, 58vw"><source type="image/webp" srcset="/art/night-ascent-768.webp 768w, /art/night-ascent-1280.webp 1280w" sizes="(max-width: 760px) 100vw, 58vw"><img src="/art/night-ascent-1280.jpg" width="1280" height="853" fetchpriority="high" alt="A chain of warm trail lights climbs toward an observatory on a dark mountain ridge."></picture>
@@ -91,8 +90,7 @@ function landingPage(): string {
 
     <section class="limits" aria-labelledby="limits-title"><div><p class="eyebrow">Clear boundaries</p><h2 id="limits-title">A reasoning aid, not a diagnosis</h2></div><div><p>The board does not generate a curriculum or predict mastery. It uses only the dependencies and statuses you enter.</p><p>Export every concept and connection as JSON or Markdown. No account is required.</p></div></section>
 
-    <section class="pricing" aria-labelledby="pricing-title"><div><p class="eyebrow">Keep the map for the long term</p><h2 id="pricing-title">One useful goal is free</h2><p>Build one goal with up to 25 concepts. Offline use, list view, and both exports stay free.</p></div><div class="price-panel"><p class="price"><strong>$24</strong> <span>one time</span></p><p>Add unlimited goals and concepts. Keep a full repair history.</p><a class="button primary" href="${BUY_URL}">Buy lifetime access</a><button class="text-button" type="button" data-open-license>Have a license? Paste it</button><small>Sociobot/Dodo is the merchant of record.</small></div></section>
-    ${licenseDialog()}
+    <section class="pricing" aria-labelledby="pricing-title"><div><p class="eyebrow">Keep the map for the long term</p><h2 id="pricing-title">The whole pathboard is included</h2><p>Add every goal and concept you need. Offline use, list view, repair history, and both exports are included.</p></div><div class="price-panel"><p>Your map remains local to this browser.</p><a class="button primary" href="/board" data-nav>Start your board</a><small>Export JSON or Markdown whenever you want a copy.</small></div></section>
   </main>`);
 }
 
@@ -105,19 +103,16 @@ function appPage(): string {
   const goal = goals.find((item) => item.id === state.activeGoalId) ?? goals[0] ?? null;
   if (goal && state.activeGoalId !== goal.id) state.activeGoalId = goal.id;
   const next = recommendation(state, goal?.id ?? null);
-  const paid = isDemo || hasPaidLicense();
   return shell(`${isDemo ? demoBanner() : ''}<main id="main" class="workspace">
     <section class="workspace-head">
       <div><p class="eyebrow">${isDemo ? 'Sample calculus map' : 'Your local map'}</p><h1 tabindex="-1">Choose the next concept to repair</h1><p>Map the prerequisites yourself. The recommendation follows only those links.</p></div>
       <div class="workspace-actions"><button class="button primary" type="button" data-add-goal>Add goal</button><button class="button secondary" type="button" data-export-menu>Export map</button><label class="button secondary file-button">Import JSON<input type="file" accept="application/json,.json" data-import></label></div>
     </section>
     ${storageError ? `<div class="error-banner" role="alert">${esc(storageError)} Changes will stay on this screen. Export JSON before closing it.</div>` : ''}
-    ${!paid ? `<div class="free-note"><span>Free board: ${goals.length}/1 goal · ${state.concepts.length}/25 concepts</span><a href="${BUY_URL}">Buy lifetime access for $24</a></div>` : ''}
     ${goals.length === 0 ? emptyWorkspace() : boardWorkspace(goal!, next)}
     ${conceptDialog()}
     ${connectionDialog()}
     ${exportDialog()}
-    ${licenseDialog()}
   </main>`);
 }
 
@@ -139,7 +134,7 @@ function boardWorkspace(goal: Concept, next: Concept | null): string {
       ${view === 'board' ? graphView(goal.id, next?.id ?? null) : listView(goal.id, next?.id ?? null)}
       ${selectedPanel()}
     </section>
-    ${state.repairs.length ? `<details class="repair-log"><summary>${state.repairs.length} marked repair${state.repairs.length === 1 ? '' : 's'}</summary><ol>${state.repairs.slice().reverse().slice(0, isDemo || hasPaidLicense() ? 100 : 5).map((item) => `<li><span>${esc(item.conceptTitle)}</span><span>${statusLabel[item.status]}</span><time datetime="${item.at}">${new Date(item.at).toLocaleDateString()}</time></li>`).join('')}</ol></details>` : ''}`;
+    ${state.repairs.length ? `<details class="repair-log"><summary>${state.repairs.length} marked repair${state.repairs.length === 1 ? '' : 's'}</summary><ol>${state.repairs.slice().reverse().map((item) => `<li><span>${esc(item.conceptTitle)}</span><span>${statusLabel[item.status]}</span><time datetime="${item.at}">${new Date(item.at).toLocaleDateString()}</time></li>`).join('')}</ol></details>` : ''}`;
 }
 
 function layout(goalId: string): { items: Array<Concept & { x: number; y: number; depth: number }>; width: number; height: number } {
@@ -199,16 +194,12 @@ function exportDialog(): string {
   return `<dialog data-export-dialog><div class="dialog-head"><div><p class="eyebrow">Portable by design</p><h2>Export your whole map</h2></div><button class="icon-button" data-close-dialog aria-label="Close dialog">×</button></div><p>Both files include every goal, concept, status, and dependency.</p><div class="export-options"><button class="button primary" type="button" data-export="json">Export JSON</button><button class="button secondary" type="button" data-export="markdown">Export Markdown</button></div></dialog>`;
 }
 
-function licenseDialog(): string {
-  return `<dialog data-license-dialog><form method="dialog" data-license-form><div class="dialog-head"><div><p class="eyebrow">Restore purchase</p><h2>Paste your license</h2></div><button class="icon-button" value="cancel" aria-label="Close dialog">×</button></div><label>License token<input name="license" required autocomplete="off" spellcheck="false"></label><p class="form-hint">The token stays on this device. It is sent only to Sociobot for verification.</p><p class="form-error" role="alert" data-license-error></p><div class="dialog-actions"><button class="button secondary" value="cancel">Cancel</button><button class="button primary" value="default" data-save-license>Verify license</button></div>${hasPaidLicense() ? '<button class="danger-link" type="button" data-remove-license>Remove license from this device</button>' : ''}</form></dialog>`;
-}
-
 function privacyPage(): string {
-  return shell(`<main id="main" class="prose-page"><p class="eyebrow">Privacy</p><h1 tabindex="-1">Your map stays on your device</h1><p class="lede">Prerequisite Pathboard has no account system, ads, or analytics.</p><h2>What is stored</h2><p>Your real pathboard is stored in your browser’s IndexedDB database. A license token and its latest verdict are stored in localStorage. Demo edits stay in memory and disappear when you leave or reload.</p><h2>What is sent</h2><p>Your concepts, notes, statuses, and exported files are never sent by this app. When you add a license, the token goes to <code>api.sociobot.in</code> to check whether it is active.</p><h2>What you control</h2><p>You can export your map as JSON or Markdown. Clear this site’s browser storage to remove local data. You can also remove a saved license inside the board.</p><p>Effective: August 28, 2026. Questions: <a href="mailto:privacy@sociobot.in">privacy@sociobot.in</a></p></main>`);
+  return shell(`<main id="main" class="prose-page"><p class="eyebrow">Privacy</p><h1 tabindex="-1">Your map stays on your device</h1><p class="lede">Prerequisite Pathboard has no account system, ads, or analytics.</p><h2>What is stored</h2><p>Your real pathboard is stored in your browser’s IndexedDB database. Demo edits stay in memory and disappear when you leave or reload.</p><h2>What is sent</h2><p>Your concepts, notes, statuses, and exported files are never sent by this app.</p><h2>What you control</h2><p>You can export your map as JSON or Markdown. Clear this site’s browser storage to remove local data.</p><p>Effective: August 28, 2026. Questions: <a href="mailto:privacy@sociobot.in">privacy@sociobot.in</a></p></main>`);
 }
 
 function termsPage(): string {
-  return shell(`<main id="main" class="prose-page"><p class="eyebrow">Terms</p><h1 tabindex="-1">Use the board as a planning aid</h1><p class="lede">Prerequisite Pathboard helps you record your own learning dependencies. It does not diagnose knowledge or promise results.</p><h2>Using the product</h2><p>You are responsible for the concepts and links you enter. Keep exports if the map matters to you. Browser data can be lost when storage is cleared.</p><h2>Free and paid use</h2><p>The free version includes one goal with up to 25 concepts. A $24 one-time purchase adds unlimited goals, unlimited concepts, and full repair history for this product version.</p><h2>Payment and refunds</h2><p>Sociobot/Dodo is the merchant of record. Checkout, receipts, and refunds are handled there. A refunded or revoked license stops paid access.</p><h2>Availability</h2><p>The software is provided as is, without a guarantee of uninterrupted availability. You retain ownership of the map you create.</p><p>Effective: August 28, 2026. Questions: <a href="mailto:support@sociobot.in">support@sociobot.in</a></p></main>`);
+  return shell(`<main id="main" class="prose-page"><p class="eyebrow">Terms</p><h1 tabindex="-1">Use the board as a planning aid</h1><p class="lede">Prerequisite Pathboard helps you record your own learning dependencies. It does not diagnose knowledge or promise results.</p><h2>Using the product</h2><p>You are responsible for the concepts and links you enter. Keep exports if the map matters to you. Browser data can be lost when storage is cleared.</p><h2>Availability</h2><p>The software is provided as is, without a guarantee of uninterrupted availability. You retain ownership of the map you create.</p><p>Effective: August 28, 2026. Questions: <a href="mailto:support@sociobot.in">support@sociobot.in</a></p></main>`);
 }
 
 function notFoundPage(): string {
@@ -269,17 +260,7 @@ function showToast(message: string): void {
   toastTimer = window.setTimeout(() => toast.classList.remove('visible'), 3200);
 }
 
-function canAdd(kind: Concept['kind']): boolean {
-  if (isDemo || hasPaidLicense()) return true;
-  if (kind === 'goal' && state.concepts.some((item) => item.kind === 'goal')) {
-    showToast('The free board includes one goal. Lifetime access adds more.'); return false;
-  }
-  if (state.concepts.length >= 25) { showToast('The free board includes 25 concepts. Export stays available.'); return false; }
-  return true;
-}
-
 function openConceptDialog(kind: Concept['kind'], dependentId = '', conceptId = ''): void {
-  if (!conceptId && !canAdd(kind)) return;
   const dialog = document.querySelector<HTMLDialogElement>('[data-concept-dialog]')!;
   const form = dialog.querySelector<HTMLFormElement>('[data-concept-form]')!;
   const item = state.concepts.find((concept) => concept.id === conceptId);
@@ -321,7 +302,6 @@ function bindEvents(): void {
   document.querySelector<HTMLButtonElement>('[data-connect]')?.addEventListener('click', () => document.querySelector<HTMLDialogElement>('[data-connection-dialog]')?.showModal());
   document.querySelector<HTMLButtonElement>('[data-export-menu]')?.addEventListener('click', () => document.querySelector<HTMLDialogElement>('[data-export-dialog]')?.showModal());
   document.querySelectorAll<HTMLButtonElement>('[data-close-dialog]').forEach((button) => button.addEventListener('click', () => button.closest('dialog')?.close()));
-  document.querySelectorAll<HTMLButtonElement>('[data-open-license]').forEach((button) => button.addEventListener('click', () => document.querySelector<HTMLDialogElement>('[data-license-dialog]')?.showModal()));
 
   const conceptForm = document.querySelector<HTMLFormElement>('[data-concept-form]');
   conceptForm?.addEventListener('submit', (event) => {
@@ -381,30 +361,21 @@ function bindEvents(): void {
   }));
   document.querySelector<HTMLInputElement>('[data-import]')?.addEventListener('change', async (event) => {
     const input = event.target as HTMLInputElement; const file = input.files?.[0]; if (!file) return;
-    try { state = validateBoard(JSON.parse(await file.text())); selectedId = null; await persist('Pathboard imported.'); }
+    try {
+      const imported = validateBoard(JSON.parse(await file.text()));
+      state = imported;
+      selectedId = null;
+      await persist('Pathboard imported.');
+    }
     catch (error) { showToast(`${error instanceof Error ? error.message : 'The file could not be read.'} Choose a Pathboard JSON export.`); }
   });
-
-  const licenseForm = document.querySelector<HTMLFormElement>('[data-license-form]');
-  licenseForm?.addEventListener('submit', async (event) => {
-    const submitter = (event as SubmitEvent).submitter as HTMLButtonElement | null;
-    if (!submitter?.hasAttribute('data-save-license')) return;
-    event.preventDefault(); const token = String(new FormData(licenseForm).get('license') ?? '').trim();
-    if (!token) return; storeLicense(token); submitter.disabled = true; submitter.textContent = 'Checking…';
-    const valid = await verifyLicense();
-    if (valid === false) { clearLicense(); licenseForm.querySelector<HTMLElement>('[data-license-error]')!.textContent = 'This license is not active. Check the token or buy a new license.'; submitter.disabled = false; submitter.textContent = 'Verify license'; return; }
-    licenseForm.closest('dialog')?.close(); await render(); showToast(valid ? 'Lifetime access restored.' : 'License saved. It will be checked when you are online.');
-  });
-  licenseForm?.querySelector<HTMLButtonElement>('[data-remove-license]')?.addEventListener('click', () => { clearLicense(); licenseForm.closest('dialog')?.close(); void render(); showToast('License removed from this device.'); });
 }
 
 window.addEventListener('popstate', () => void render(true));
 window.addEventListener('online', () => { document.querySelectorAll<HTMLElement>('[data-network]').forEach((item) => item.textContent = 'Online'); showToast('Back online.'); });
 window.addEventListener('offline', () => { document.querySelectorAll<HTMLElement>('[data-network]').forEach((item) => item.textContent = 'Offline'); showToast('You are offline. Saved maps still work.'); });
 
-captureLicense();
 void render();
-void verifyLicense().then((valid) => { if (valid === false) { void render(); showToast('The saved license is no longer active.'); } });
 
 if ('serviceWorker' in navigator && (location.protocol === 'https:' || ['localhost', '127.0.0.1'].includes(location.hostname))) {
   window.addEventListener('load', () => navigator.serviceWorker.register('/service-worker.js').catch(() => undefined));

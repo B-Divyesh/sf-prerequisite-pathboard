@@ -10,8 +10,7 @@ Audited August 28, 2026. The headline states the job in six words. The supportin
 | Opens an isolated 14-concept calculus map. | 6 | Pass |
 | Works offline after the first visit. | 6 | Pass |
 | Your map stays on this device. | 6 | Pass |
-| One goal is free. | 4 | Pass |
-| Lifetime access costs $24. | 4 | Pass |
+| Every goal, concept, and export is included. | 7 | Pass |
 | A route you wrote, not a prescribed course | 8 | Pass |
 | Every line comes from a dependency you enter. | 8 | Pass |
 | Statuses help the board find the first unresolved step. | 9 | Pass |
@@ -28,14 +27,12 @@ Audited August 28, 2026. The headline states the job in six words. The supportin
 | It uses only the dependencies and statuses you enter. | 9 | Pass |
 | Export every concept and connection as JSON or Markdown. | 9 | Pass |
 | No account is required. | 4 | Pass |
-| One useful goal is free | 5 | Pass |
-| Build one goal with up to 25 concepts. | 8 | Pass |
-| Offline use, list view, and both exports stay free. | 9 | Pass |
-| Add unlimited goals and concepts. | 5 | Pass |
-| Keep a full repair history. | 6 | Pass |
-| Buy lifetime access | 3 | Pass |
-| Have a license? Paste it. | 5 | Pass |
-| Sociobot/Dodo is the merchant of record. | 6 | Pass |
+| The whole pathboard is included | 5 | Pass |
+| Add every goal and concept you need. | 8 | Pass |
+| Offline use, list view, repair history, and both exports are included. | 11 | Pass |
+| Your map remains local to this browser. | 8 | Pass |
+| Start your board | 4 | Pass |
+| Export JSON or Markdown whenever you want a copy. | 10 | Pass |
 
 ## Terminology table
 
@@ -49,6 +46,5 @@ Audited August 28, 2026. The headline states the job in six words. The supportin
 | Suggested work unit | next session |
 | Completed gap | repair |
 | Trial environment | demo |
-| Paid entitlement | license |
 
 Catalog description: “Map prerequisites backward and choose the next concept to repair.” (9 words, 61 characters.)

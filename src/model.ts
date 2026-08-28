@@ -31,7 +31,10 @@ export function depthFromGoal(state: BoardState, goalId: string): Map<string, nu
     const current = queue.shift()!;
     const depth = depths.get(current) ?? 0;
     state.edges.filter((item) => item.dependentId === current).forEach((item) => {
-      if (!depths.has(item.prerequisiteId) || (depths.get(item.prerequisiteId) ?? 0) < depth + 1) {
+      // An acyclic path cannot be longer than the number of concepts. The
+      // bound preserves longest-path recommendation ordering while keeping a
+      // damaged legacy record from trapping the renderer in a loop.
+      if (depth < state.concepts.length && (!depths.has(item.prerequisiteId) || (depths.get(item.prerequisiteId) ?? 0) < depth + 1)) {
         depths.set(item.prerequisiteId, depth + 1);
         queue.push(item.prerequisiteId);
       }
@@ -66,26 +69,61 @@ export function validateBoard(value: unknown): BoardState {
   if (board.version !== 1 || !Array.isArray(board.concepts) || !Array.isArray(board.edges)) {
     throw new Error('This pathboard format is not supported.');
   }
+  const isStatus = (status: unknown): status is KnowledgeStatus => typeof status === 'string' && ['not_yet', 'explain', 'solve'].includes(status);
+  const isDate = (date: unknown): date is string => typeof date === 'string' && !Number.isNaN(Date.parse(date));
   const ids = new Set<string>();
+  const concepts: Concept[] = [];
   for (const item of board.concepts) {
-    if (!item || typeof item.id !== 'string' || typeof item.title !== 'string' || !['goal', 'concept'].includes(item.kind) || !['not_yet', 'explain', 'solve'].includes(item.status)) {
+    if (!item || typeof item.id !== 'string' || !item.id || typeof item.title !== 'string' || !item.title.trim() || item.title.length > 90 || !['goal', 'concept'].includes(item.kind) || !isStatus(item.status) || typeof item.notes !== 'string' || item.notes.length > 400 || !isDate(item.createdAt) || !isDate(item.updatedAt)) {
       throw new Error('One concept is missing a title, type, or status.');
     }
     if (ids.has(item.id)) throw new Error('Two concepts use the same identifier.');
     ids.add(item.id);
+    concepts.push({ id: item.id, title: item.title.trim(), notes: item.notes, kind: item.kind, status: item.status, createdAt: item.createdAt, updatedAt: item.updatedAt });
   }
+  const edgeIds = new Set<string>();
+  const edges = [] as BoardState['edges'];
+  const pairs = new Set<string>();
   for (const item of board.edges) {
-    if (!item || !ids.has(item.prerequisiteId) || !ids.has(item.dependentId)) {
+    if (!item || typeof item.id !== 'string' || !item.id || !ids.has(item.prerequisiteId) || !ids.has(item.dependentId) || item.prerequisiteId === item.dependentId) {
       throw new Error('One prerequisite points to a missing concept.');
     }
+    const pair = `${item.prerequisiteId}\u0000${item.dependentId}`;
+    if (edgeIds.has(item.id) || pairs.has(pair)) throw new Error('A prerequisite is duplicated.');
+    edgeIds.add(item.id);
+    pairs.add(pair);
+    edges.push({ id: item.id, prerequisiteId: item.prerequisiteId, dependentId: item.dependentId });
   }
+  const prerequisites = new Map<string, string[]>();
+  for (const edge of edges) prerequisites.set(edge.dependentId, [...(prerequisites.get(edge.dependentId) ?? []), edge.prerequisiteId]);
+  const visiting = new Set<string>();
+  const visited = new Set<string>();
+  const visit = (id: string): void => {
+    if (visiting.has(id)) throw new Error('This import contains a prerequisite loop. Remove the loop and try again.');
+    if (visited.has(id)) return;
+    visiting.add(id);
+    for (const prerequisiteId of prerequisites.get(id) ?? []) visit(prerequisiteId);
+    visiting.delete(id);
+    visited.add(id);
+  };
+  for (const id of ids) visit(id);
+  const repairs = [] as BoardState['repairs'];
+  const repairIds = new Set<string>();
+  for (const item of board.repairs ?? []) {
+    if (!item || typeof item.id !== 'string' || !item.id || repairIds.has(item.id) || !ids.has(item.conceptId) || typeof item.conceptTitle !== 'string' || !item.conceptTitle.trim() || item.conceptTitle.length > 90 || !isStatus(item.status) || !isDate(item.at)) {
+      throw new Error('One repair entry is incomplete. Remove it and try again.');
+    }
+    repairIds.add(item.id);
+    repairs.push({ id: item.id, conceptId: item.conceptId, conceptTitle: item.conceptTitle.trim(), status: item.status, at: item.at });
+  }
+  const goals = concepts.filter((item) => item.kind === 'goal');
   return {
     version: 1,
     name: typeof board.name === 'string' ? board.name.slice(0, 120) : 'Imported pathboard',
-    concepts: board.concepts,
-    edges: board.edges,
-    activeGoalId: typeof board.activeGoalId === 'string' && ids.has(board.activeGoalId) ? board.activeGoalId : board.concepts.find((item) => item.kind === 'goal')?.id ?? null,
-    repairs: Array.isArray(board.repairs) ? board.repairs : [],
+    concepts,
+    edges,
+    activeGoalId: typeof board.activeGoalId === 'string' && goals.some((item) => item.id === board.activeGoalId) ? board.activeGoalId : goals[0]?.id ?? null,
+    repairs,
     updatedAt: new Date().toISOString()
   };
 }
