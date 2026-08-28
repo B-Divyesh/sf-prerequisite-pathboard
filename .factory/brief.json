@@ -1,0 +1,11 @@
+{
+  "slug": "prerequisite-pathboard",
+  "title": "Prerequisite Pathboard",
+  "territory": "utilities",
+  "user": "Adults relearning a technical subject who need to expose missing prerequisites and choose the next small concept deliberately.",
+  "smallest_useful_product": "Offline graph board with goal nodes, prerequisite edges, a can explain/can solve/not yet status, and one next-session recommendation derived only from user-entered dependencies.",
+  "artifact_class": "pwa-offline",
+  "monetization": "one-time",
+  "constraints": "All graph data exportable as JSON/Markdown; avoid claims of pedagogical diagnosis; accessible non-graph list view required.",
+  "summary": "Map prerequisites backward and choose the next concept to repair."
+}
