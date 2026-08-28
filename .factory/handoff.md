@@ -1,45 +1,70 @@
-# Review handoff — Prerequisite Pathboard
+# Polish handoff — Prerequisite Pathboard
 
 ## Outcome
 
-Adversarial first-read review 1 is complete. Verdict: **FAIL** with eight findings in `.factory/review-1.md`; F-1-1 through F-1-3 are blocking. Product code was not modified.
+Polish round 1 repaired every finding in `.factory/review-1.md` and all
+unresolved earlier verification findings. The product remains a static,
+offline-capable Vite PWA with its night-ascent visual system.
 
-## What was checked
+- Repair commit: `84dbea9551ef678c548b1c9639a1c72f5bcd32ab`
+- Branch: `main`; pushed to `origin`
+- Deployment: `/opt/fleet/lib/deploy-static.sh prerequisite-pathboard dist`
+- Live URL: <https://prerequisite-pathboard.sociobot.in>
+- Demo URL: <https://prerequisite-pathboard.sociobot.in/?demo=1>
 
-- Cold live loads at 390 × 844 and 1440 × 900 before scrolling.
-- Every landing-page and README copy unit with word counts and plain-words flags.
-- One-click demo content, banner, reset, real-data isolation, storage, same-origin traffic, and offline reload.
-- Every `.factory/claims.json` command separately from a no-hardlink clean clone.
-- Full test/build/audit gates, live accessibility scans, route metadata, 404 behavior, navigation focus, link crawl, response headers, and historical defects.
-- Missed AI/import/export/sync leverage.
+## What changed
 
-## Verification results
+- Added the direct, isolated `?demo=1` entry point. It shows the sample-map
+  banner, Reset demo, and Start for real controls; demo edits never change the
+  real IndexedDB record.
+- Completed the claims registry with rendered-edge and no-tracking coverage,
+  and strengthened demo isolation to inspect the real stored record.
+- Reworked mobile targets and preview layout, corrected the desktop first
+  screen, removed the nested landmark, and added desktop/mobile Axe coverage.
+- Made Open Graph/Twitter metadata route-aware; synchronized the static 404
+  shell, its metadata, navigation/footer, and sitemap behavior.
+- Rewrote map terminology and README user-facing storage/offline language;
+  refreshed the copy audit and catalog description.
+
+## Verification
+
+Clean-clone evidence used `/tmp/pathboard-clean.foc6rK`:
 
 ```text
-npm ci                                      PASS
-12 individual claim commands                PASS (12/12)
-CI=1 npm test                               PASS (28/28)
-npm run build                               PASS
-npm audit --audit-level=high                PASS (0 vulnerabilities)
-verify-url.sh / and /demo                   PASS
-live offline demo reload                    PASS
-live unknown-route HTTP status              PASS (404)
-live mobile Axe                              FAIL (1 serious on /; 1 moderate on /demo)
+git clone --no-hardlinks /work/repo /tmp/pathboard-clean.foc6rK  PASS
+npm ci                                                        PASS (0 vulnerabilities)
+14 exact claims.json commands, each run separately           PASS (14/14)
+CI=1 npm test -- --workers=1                                 PASS (39/39)
+npm run build                                                 PASS
+npm audit --audit-level=high                                 PASS (0 vulnerabilities)
 ```
 
-The production build emits 32.22 kB JavaScript (10.75 kB gzip) and 18.69 kB CSS (5.09 kB gzip).
+The production build emits 33.47 kB JavaScript (10.89 kB gzip) and 18.91 kB
+CSS (5.14 kB gzip). `dist/index.html` is at the output root.
 
-## Findings left for the repair worker
+Live verification after deployment:
 
-- F-1-1: unlisted visitor claims remain despite the README's complete-coverage statement.
-- F-1-2: mobile Pathboard and Demo header targets are below 44 × 44 px; the current test misses them.
-- F-1-3: the mobile landing preview is horizontally scrollable but not keyboard-focusable.
-- F-1-4: all three plain facts sit below the 1440 × 900 first screen.
-- F-1-5: the demo selected panel is a nested complementary landmark.
-- F-1-6: the static 404 has stale version/navigation and incomplete metadata.
-- F-1-7: deep-route Open Graph and Twitter copy remains landing-page copy.
-- F-1-8: artifact terminology changes between map, board, pathboard, and route; the README exposes avoidable implementation jargon.
+```text
+verify-url.sh https://prerequisite-pathboard.sociobot.in     PASS
+live mobile Axe: /, ?demo=1, /demo, /board, /privacy, /terms PASS (0 violations)
+live unknown route                                            PASS (HTTP 404)
+live mobile Lighthouse                                       100 / 100 / 100 / 100
+```
 
-## Evidence
+Lighthouse details: FCP 1.0 s, LCP 1.1 s, TBT 70 ms, CLS 0.
+Evidence is in `/work/.evidence/prerequisite-pathboard-polish-1/`, including
+`verify.json`, `live-review.json`, `live-home-desktop.png`,
+`live-home-mobile.png`, `live-demo-mobile.png`, and
+`lighthouse-live-mobile.json`.
 
-The committed review is `.factory/review-1.md`. Ephemeral screenshots and verifier output are under `/tmp/pathboard-review.lBKR9G/evidence/`; the disposable clean clone used for claim execution is `/tmp/pathboard-review.lBKR9G/clean/`.
+## How to run
+
+```sh
+npm ci
+npm test
+npm run build
+npm run preview
+```
+
+Open `http://127.0.0.1:4173/?demo=1` to exercise the isolated sample map.
+There are no known gaps.
