@@ -2,7 +2,7 @@
 
 ## Release status
 
-Repair candidate is buildable and verified locally. It repairs every release blocker in the independent report for candidate `0c98ecbf463895cf9b9b45dd631561acc48f14c0`.
+Repair candidate `e9d4667a9802e0da4110c37e8d3bd00fcfa629a8` is buildable and verified locally. It repairs every release blocker in the independent report for candidate `0c98ecbf463895cf9b9b45dd631561acc48f14c0`.
 
 ## What changed
 
