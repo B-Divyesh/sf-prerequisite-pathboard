@@ -1,0 +1,8 @@
+{
+  "generator": "/opt/fleet/lib/gen-image.sh",
+  "deployment": "factory-image",
+  "date": "2026-08-28",
+  "size": "1536x1024",
+  "quality": "high",
+  "prompt": "A cinematic, painterly night landscape across alpine ridges. A warm observatory on a far summit and a sparse chain of amber trail beacons suggest prerequisite steps. Near-black teal, pine, mist, ember, and muted cyan. No people, text, logos, watermark, interface, castle, or neon gradient."
+}
