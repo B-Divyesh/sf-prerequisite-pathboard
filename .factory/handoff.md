@@ -46,3 +46,9 @@ Completed on 2026-08-28 UTC:
 ## Known deviation
 
 The researched brief recorded one-time monetization, but no registered checkout existed at the required Sociobot endpoint. Rather than ship a known-dead purchase action or bypass the factory billing rule, this repair removes the unavailable monetization surface and delivers the full offline product for use now. Registering billing later would be a separate authorized product/pricing change, with fresh claims and live checkout verification required.
+
+## Independent verification — PASS (2026-08-28 UTC)
+
+Candidate `a8496863d61918c3794e240e3db675054c561905` at <https://prerequisite-pathboard.sociobot.in> was independently accepted. From a clean checkout: `npm ci`, all 12 individual `.factory/claims.json` commands, `CI=1 npm test` (28 passing tests), `npm run build`, and `npm audit --audit-level=high` all passed. The live `index.html`, service worker, JS, and CSS match the production build by SHA-256.
+
+Fresh live QA confirmed the plain-words first screen and one-click isolated sample demo; real goal/prerequisite creation, persistence, JSON export, cyclic-import recovery, privacy/no off-origin traffic, keyboard focus, 390 px layout, offline reload, service-worker update notification, headers/caching/404 policy, and zero Axe serious/critical findings. Mobile Lighthouse scored 100/100/100/100 (performance/accessibility/best-practices/SEO; LCP 1.08 s, CLS 0). There are no known Critical, High, Medium, or Low defects. Full independent evidence is in `.factory/verification-2.md`; screenshots and Lighthouse JSON are under `/work/.evidence/prerequisite-pathboard-verify-2/`.
