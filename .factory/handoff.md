@@ -30,7 +30,8 @@ The detailed finding map is in `.factory/polish-3.md`.
 
 ### Clean clone
 
-Non-hardlinked clean clone: `/tmp/pathboard-polish3-clean.Yjwrpw/repo`.
+Non-hardlinked clean clone of current `main` (`a28df6444a18ea568cbe6e611669bba7dbb4e1b4`):
+`/tmp/pathboard-polish3-final.vlsmBb/repo`.
 
 ```text
 npm ci                                      PASS (24 packages; 0 vulnerabilities)
