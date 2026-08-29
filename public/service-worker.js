@@ -1,4 +1,4 @@
-const VERSION = 'pathboard-v3';
+const VERSION = 'pathboard-v4';
 const SHELL = `${VERSION}-shell`;
 const RUNTIME = `${VERSION}-runtime`;
 const PRECACHE = ['/', '/index.html', '/manifest.webmanifest', '/favicon.svg', '/art/night-ascent-768.avif', '/art/night-ascent-1280.avif', '/art/night-ascent-768.webp', '/art/night-ascent-1280.webp', '/art/night-ascent-1280.jpg', '/offline.html'];

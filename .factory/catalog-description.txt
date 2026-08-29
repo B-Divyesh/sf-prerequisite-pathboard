@@ -1,1 +1,1 @@
-Map prerequisites backward and choose the next concept to repair.
+Map prerequisites backward to choose the next concept to repair.

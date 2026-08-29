@@ -55,7 +55,7 @@ function footer(): string {
   return `<footer class="site-footer">
     <p><strong>Prerequisite Pathboard</strong><br><span>Map backward. Choose one repair.</span></p>
     <nav aria-label="Footer navigation"><a href="/privacy" data-nav>Privacy</a><a href="/terms" data-nav>Terms</a><a href="https://hello-factory.sociobot.in" target="_blank" rel="noreferrer">Built by Param Factory <span class="sr-only">(opens in a new tab)</span></a></nav>
-    <p class="build-id">Version 1.2 · Original generated artwork</p>
+    <p class="build-id">Version 1.3 · Original generated artwork</p>
   </footer>`;
 }
 
@@ -71,7 +71,7 @@ function landingPage(): string {
         <h1 tabindex="-1">Map backward. Learn the next prerequisite.</h1>
         <p class="hero-intro">For adults rebuilding technical knowledge who need one clear concept to work on next.</p>
         <div class="hero-action"><a class="button primary" href="/?demo=1" data-nav>Try it with sample data</a><span>Opens an isolated 14-concept calculus map.</span></div>
-        <ul class="plain-facts" aria-label="Product facts"><li>Works offline after the first visit.</li><li>Your map stays on this device.</li><li>Every goal, concept, and export is included.</li></ul>
+        <ul class="plain-facts" aria-label="Product facts"><li>Works offline after the first visit.</li><li>Your map stays on this device.</li><li>Create multiple goals, track repairs, and export your map.</li></ul>
       </div>
       <div class="hero-art">
         <picture><source type="image/avif" srcset="/art/night-ascent-768.avif 768w, /art/night-ascent-1280.avif 1280w" sizes="(max-width: 760px) 100vw, 58vw"><source type="image/webp" srcset="/art/night-ascent-768.webp 768w, /art/night-ascent-1280.webp 1280w" sizes="(max-width: 760px) 100vw, 58vw"><img src="/art/night-ascent-1280.jpg" width="1280" height="853" fetchpriority="high" alt="A chain of warm trail lights climbs toward an observatory on a dark mountain ridge."></picture>
@@ -80,7 +80,7 @@ function landingPage(): string {
     </section>
 
     <section class="preview-section" aria-labelledby="preview-title">
-      <div class="section-heading"><p class="eyebrow">See the structure</p><h2 id="preview-title">A map you wrote, not a prescribed course</h2><p>Every line comes from a dependency you enter. Statuses help the map find the first unresolved step.</p></div>
+      <div class="section-heading"><p class="eyebrow">Example prerequisite map</p><h2 id="preview-title">A map you wrote, not a prescribed course</h2><p>Every line comes from a dependency you enter. Statuses help the map find the first unresolved step.</p></div>
       <div class="mini-board" role="group" aria-label="Example prerequisite path">
         <div class="mini-node ready">Fraction arithmetic <span>Not yet</span></div><span class="mini-edge" aria-hidden="true">→</span>
         <div class="mini-node">Algebraic simplification <span>Not yet</span></div><span class="mini-edge" aria-hidden="true">→</span>
@@ -89,13 +89,13 @@ function landingPage(): string {
       </div>
     </section>
 
-    <section class="steps" aria-labelledby="steps-title"><div class="section-heading"><p class="eyebrow">How it works</p><h2 id="steps-title">Build the map in three moves</h2></div>
+    <section class="steps" aria-labelledby="steps-title"><div class="section-heading"><p class="eyebrow">How it works</p><h2 id="steps-title">Build the map in three steps</h2></div>
       <ol><li><span>01</span><h3>Name the goal</h3><p>Write the exact idea or problem you want to handle.</p></li><li><span>02</span><h3>Work backward</h3><p>Add only the concepts your goal depends on.</p></li><li><span>03</span><h3>Mark and choose</h3><p>Update each status. The map points to one ready repair.</p></li></ol>
     </section>
 
-    <section class="limits" aria-labelledby="limits-title"><div><p class="eyebrow">Clear boundaries</p><h2 id="limits-title">A reasoning aid for your own map</h2></div><div><p>The recommendation uses only the dependencies and statuses you enter.</p><p>Export every concept and connection as JSON or Markdown. No account is required.</p></div></section>
+    <section class="limits" aria-labelledby="limits-title"><div><p class="eyebrow">What the recommendation uses</p><h2 id="limits-title">A reasoning aid for your own map</h2></div><div><p>The recommendation uses only the dependencies and statuses you enter.</p><p>Export your map as JSON or Markdown. No account is required.</p></div></section>
 
-    <section class="pricing" aria-labelledby="pricing-title"><div><p class="eyebrow">Keep the map for the long term</p><h2 id="pricing-title">Use the full map without limits</h2><p>Add every goal and concept you need. Offline use, list view, repair history, and both exports are included.</p></div><div class="price-panel"><p>Your map remains local to this browser.</p><a class="button primary" href="/board" data-nav>Start your map</a><small>Export JSON or Markdown whenever you want a copy.</small></div></section>
+    <section class="pricing" aria-labelledby="pricing-title"><div><p class="eyebrow">Included map features</p><h2 id="pricing-title">Create multiple goals, track repairs, and export your map</h2><p>Works offline. Use the list view, repair history, and JSON or Markdown export.</p></div><div class="price-panel"><p>Your map remains local to this browser.</p><a class="button primary" href="/board" data-nav>Start your map</a><small>Export JSON or Markdown whenever you want a copy.</small></div></section>
   </main>`);
 }
 
@@ -196,7 +196,7 @@ function connectionDialog(): string {
 }
 
 function exportDialog(): string {
-  return `<dialog data-export-dialog><div class="dialog-head"><div><p class="eyebrow">Portable by design</p><h2>Export your whole map</h2></div><button class="icon-button" data-close-dialog aria-label="Close dialog">×</button></div><p>Both files include every goal, concept, status, and dependency.</p><div class="export-options"><button class="button primary" type="button" data-export="json">Export JSON</button><button class="button secondary" type="button" data-export="markdown">Export Markdown</button></div></dialog>`;
+  return `<dialog data-export-dialog><div class="dialog-head"><div><p class="eyebrow">Portable by design</p><h2>Export your whole map</h2></div><button class="icon-button" data-close-dialog aria-label="Close dialog">×</button></div><p>Choose JSON for map data or Markdown for a readable outline.</p><div class="export-options"><button class="button primary" type="button" data-export="json">Export JSON</button><button class="button secondary" type="button" data-export="markdown">Export Markdown</button></div></dialog>`;
 }
 
 function privacyPage(): string {

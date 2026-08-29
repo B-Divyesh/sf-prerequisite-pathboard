@@ -20,7 +20,7 @@ The demo loads a 14-concept calculus map. Its edits stay separate from your real
 - JSON and Markdown exports with every concept and dependency.
 - Invalid JSON imports are rejected with a recovery step.
 - After one online visit, reopen the map without a connection.
-- Every goal, concept, repair entry, and export is included.
+- Create multiple goals, track repairs, and export your map.
 
 The recommendation uses only the dependencies and statuses you enter.
 

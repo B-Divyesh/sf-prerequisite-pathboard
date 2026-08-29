@@ -46,7 +46,7 @@ h3 { font-size: 1.25rem; line-height: 1.2; }
 .danger-link { color: var(--clay); }
 
 .site-header { position: relative; z-index: 10; display: flex; width: min(1420px, 100%); min-height: 72px; margin: 0 auto; padding: 14px clamp(20px, 4vw, 64px); align-items: center; gap: 28px; background: color-mix(in srgb, var(--night) 86%, transparent); backdrop-filter: blur(12px); }
-.wordmark { display: inline-flex; color: var(--mist); align-items: center; gap: 9px; font-family: Georgia, serif; font-size: 1.15rem; text-decoration: none; white-space: nowrap; }
+.wordmark { display: inline-flex; min-height: 44px; color: var(--mist); align-items: center; gap: 9px; font-family: Georgia, serif; font-size: 1.15rem; text-decoration: none; white-space: nowrap; }
 .route-mark { display: inline-grid; width: 32px; height: 32px; border: 1px solid var(--ember); border-radius: 50% 50% 50% 5px; place-items: center; color: var(--ember); font: 1.4rem Georgia; transform: rotate(-8deg); }
 .site-header nav { display: flex; margin-left: auto; align-items: center; gap: clamp(12px, 3vw, 32px); }
 .site-header nav a, .demo-banner a, .site-footer a { display: inline-flex; min-width: 44px; min-height: 44px; align-items: center; color: var(--lichen); font-size: .94rem; text-decoration: none; }

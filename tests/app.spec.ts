@@ -72,8 +72,11 @@ test('keyboard opens, closes, and restores focus from the goal dialog', async ({
   await expect(opener).toBeFocused();
 });
 
-test('the query-string demo entry is isolated and resettable', async ({ page }) => {
-  await page.goto('/?demo=1');
+test('the first-screen demo action opens the isolated query-string demo and reset controls', async ({ page }) => {
+  await page.goto('/');
+  const demoAction = page.getByRole('link', { name: 'Try it with sample data' });
+  await expect(demoAction).toHaveAttribute('href', '/?demo=1');
+  await demoAction.click();
   await expect(page).toHaveURL(/\?demo=1$/);
   await expect(page.getByRole('complementary', { name: 'Demo mode' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Reset demo' })).toBeVisible();

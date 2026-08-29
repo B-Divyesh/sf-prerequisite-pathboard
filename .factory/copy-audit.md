@@ -1,37 +1,54 @@
 # Landing copy audit
 
-Audited August 28, 2026 after polish round 1. The first screen says what the
-map does, who it is for, and what happens after the sample action. No landing
-sentence exceeds 22 words or contains a banned marketing term.
+Audited August 29, 2026 for polish round 3. The first screen says what the
+map does, who it is for, and what the sample action opens. Every landing and
+README copy unit is 22 words or fewer and avoids the banned words.
 
 | Landing text | Words | Result |
 | --- | ---: | --- |
+| Pathboard / Demo / My map / Privacy | 1 / 1 / 2 / 1 | Pass: navigation |
 | A map for relearning | 4 | Pass |
-| Map backward. Learn the next prerequisite. | 6 | Pass |
+| Map backward. Learn the next prerequisite. | 6 | Pass: job headline |
 | For adults rebuilding technical knowledge who need one clear concept to work on next. | 14 | Pass |
-| Try it with sample data | 5 | Pass |
+| Try it with sample data | 5 | Pass: result-naming action |
 | Opens an isolated 14-concept calculus map. | 6 | Pass |
-| Works offline after the first visit. | 6 | Pass |
-| Your map stays on this device. | 6 | Pass |
-| Every goal, concept, and export is included. | 7 | Pass |
+| Works offline after the first visit. | 6 | Claim: `offline-reload` |
+| Your map stays on this device. | 6 | Claim: `local-only` |
+| Create multiple goals, track repairs, and export your map. | 9 | Claims: `multi-goal-map`, `repair-history`, exports |
+| Example prerequisite map | 3 | Pass: names the content |
 | A map you wrote, not a prescribed course | 8 | Pass |
-| Every line comes from a dependency you enter. | 8 | Pass |
-| Statuses help the map find the first unresolved step. | 9 | Pass |
-| Build the map in three moves | 6 | Pass |
-| Name the goal | 3 | Pass |
+| Every line comes from a dependency you enter. | 8 | Claim: `rendered-edges` |
+| Statuses help the map find the first unresolved step. | 9 | Claim: `dependency-recommendation` |
+| Build the map in three steps | 6 | Pass: names the process |
+| Name the goal / Work backward / Mark and choose | 3 / 2 / 3 | Pass: task headings |
 | Write the exact idea or problem you want to handle. | 10 | Pass |
-| Work backward | 2 | Pass |
 | Add only the concepts your goal depends on. | 8 | Pass |
-| Mark and choose | 3 | Pass |
-| Update each status. The map points to one ready repair. | 10 | Pass |
+| Update each status. The map points to one ready repair. | 10 | Claim: `dependency-recommendation` |
+| What the recommendation uses | 4 | Pass: names the content |
 | A reasoning aid for your own map | 7 | Pass |
-| The recommendation uses only the dependencies and statuses you enter. | 10 | Pass |
-| Export every concept and connection as JSON or Markdown. No account is required. | 13 | Pass |
-| Use the full map without limits | 7 | Pass |
-| Add every goal and concept you need. Offline use, list view, repair history, and both exports are included. | 17 | Pass |
-| Your map remains local to this browser. | 8 | Pass |
-| Start your map | 3 | Pass |
-| Export JSON or Markdown whenever you want a copy. | 9 | Pass |
+| The recommendation uses only the dependencies and statuses you enter. | 10 | Claim: `dependency-recommendation` |
+| Export your map as JSON or Markdown. No account is required. | 9 / 4 | Claims: exports, `account-free` |
+| Included map features | 3 | Pass: names the content |
+| Works offline. Use the list view, repair history, and JSON or Markdown export. | 13 | Claims: offline, list, repairs, exports |
+| Your map remains local to this browser. | 7 | Claim: `local-only` |
+| Start your map / Export JSON or Markdown whenever you want a copy. | 3 / 9 | Pass: result-naming actions |
+| Prerequisite Pathboard / Map backward. Choose one repair. | 2 / 5 | Pass: footer |
+
+## README copy check
+
+The README's product sentences use the same terms and map each product claim
+to a registered test. Developer-only references to IndexedDB, Vite,
+Playwright, and the service worker remain in Develop, Test, or Build.
+
+| README text | Words | Result |
+| --- | ---: | --- |
+| Map prerequisites backward and choose the next concept to repair. | 10 | Pass |
+| The map recommends one ready concept from only those links and statuses. | 12 | Claim: `dependency-recommendation` |
+| The demo loads a 14-concept calculus map. | 7 | Claim coverage: demo/export tests |
+| Its edits stay separate from your real map and disappear when you leave or reload. | 15 | Claim: `demo-sandbox` |
+| Create multiple goals, track repairs, and export your map. | 9 | Claims: `multi-goal-map`, repairs, exports |
+| After one online visit, reopen the map without a connection. | 10 | Claim: `offline-reload` |
+| This app makes no tracking requests. | 7 | Claim: `no-tracking` |
 
 ## Terminology table
 
@@ -46,4 +63,4 @@ sentence exceeds 22 words or contains a banned marketing term.
 | Completed gap | repair |
 | Trial environment | demo |
 
-Catalog description: “Map prerequisites backward and choose the next concept to repair.” (9 words, 61 characters.)
+Catalog description: “Map prerequisites backward to choose the next concept to repair.” (10 words, 64 characters.)

@@ -2,7 +2,7 @@
   "name": "Prerequisite Pathboard",
   "short_name": "Pathboard",
   "description": "Map prerequisites backward and choose the next concept to repair.",
-  "start_url": "/board?v=1",
+  "start_url": "/board?v=2",
   "scope": "/",
   "display": "standalone",
   "background_color": "#07191c",

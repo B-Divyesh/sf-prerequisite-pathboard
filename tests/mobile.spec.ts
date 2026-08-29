@@ -69,6 +69,14 @@ test('390px gives every visible landing and demo control a 44px target', async (
   }
 });
 
+test('desktop home target is at least 44px high', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/');
+  const box = await page.getByRole('link', { name: 'Prerequisite Pathboard home' }).boundingBox();
+  expect(box).not.toBeNull();
+  expect(box!.height).toBeGreaterThanOrEqual(44);
+});
+
 test('desktop first screen keeps all three facts in view', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/');

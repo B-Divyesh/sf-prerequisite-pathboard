@@ -135,7 +135,7 @@ test('@claim:no-tracking makes no tracking requests or embeds', async ({ page })
   expect(source.join('\n')).not.toMatch(/google-analytics|googletagmanager|analytics\.track|stripe\.com|checkout\.js/i);
 });
 
-test('@claim:all-features-included imports multiple goals and more than 25 concepts', async ({ page }) => {
+test('@claim:multi-goal-map creates and exports a map with two goals and 26 concepts', async ({ page }) => {
   const concepts = [concept('g1', 'First goal', 'goal'), concept('g2', 'Second goal', 'goal'), ...Array.from({ length: 24 }, (_, index) => concept(`c${index}`, `Concept ${index + 1}`))];
   const board = { version: 1, name: 'Full board', concepts, edges: [], activeGoalId: 'g1', repairs: [], updatedAt: stamp };
   await page.goto('/board');
@@ -148,4 +148,5 @@ test('@claim:all-features-included imports multiple goals and more than 25 conce
   const download = await downloadPromise;
   const exported = JSON.parse(await (await import('node:fs/promises')).readFile((await download.path())!, 'utf8'));
   expect(exported.concepts).toHaveLength(26);
+  expect(exported.concepts.filter((item: { kind: string }) => item.kind === 'goal')).toHaveLength(2);
 });
