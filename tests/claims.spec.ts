@@ -139,6 +139,13 @@ test('@claim:multi-goal-map creates and exports a map with two goals and 26 conc
   const concepts = [concept('g1', 'First goal', 'goal'), concept('g2', 'Second goal', 'goal'), ...Array.from({ length: 24 }, (_, index) => concept(`c${index}`, `Concept ${index + 1}`))];
   const board = { version: 1, name: 'Full board', concepts, edges: [], activeGoalId: 'g1', repairs: [], updatedAt: stamp };
   await page.goto('/board');
+  await page.getByRole('button', { name: 'Add your first goal' }).click();
+  await page.getByLabel('Concept title').fill('First created goal');
+  await page.getByRole('button', { name: 'Save concept' }).click();
+  await page.getByRole('button', { name: 'Add goal' }).click();
+  await page.getByLabel('Concept title').fill('Second created goal');
+  await page.getByRole('button', { name: 'Save concept' }).click();
+  await expect(page.locator('[data-goal-select] option')).toHaveCount(2);
   await page.locator('[data-import]').setInputFiles({ name: 'full-board.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(board)) });
   await expect(page.getByRole('status')).toContainText('Pathboard imported');
   await expect(page.locator('[data-goal-select] option')).toHaveCount(2);
