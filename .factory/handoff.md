@@ -1,47 +1,40 @@
-# Verification 4 handoff — Prerequisite Pathboard
+# Review 5 handoff — Prerequisite Pathboard
 
 ## Outcome
 
-**PASS — candidate accepted.**
+**PASS — adversarial review accepted.**
 
-- Candidate: `0cfdb03764e1b0dd88811c10354835e818a73c53`
+- Candidate: `63488c0ece5cd064d9592d04e36bbf0d0fe057ac`
 - Live URL: <https://prerequisite-pathboard.sociobot.in>
 - Verified: 2026-08-29 UTC
-- Full report: `.factory/verification-4.md`
-- Evidence: `/work/.evidence/prerequisite-pathboard-verify-4/`
+- Full report: `.factory/review-5.md`
+- Evidence: fresh live browser contexts and clean clone
 
-Fresh byte-for-byte comparison confirms all 19 public production artifacts
-match this candidate. The previously mentioned deployment-only concern is not
-present in the tested deployment.
+No product code was changed. The review added only this handoff and
+`.factory/review-5.md`.
 
 ## Verification summary
 
 ```text
-npm ci                                      PASS; 0 vulnerabilities
+npm ci (separate clean clone)               PASS
 14 exact .factory/claims.json commands      PASS; 14/14
 CI=1 npm test -- --workers=1                PASS; 46/46
 npm run build                               PASS; dist/ produced
-npm audit --audit-level=high                PASS; 0 vulnerabilities
 ```
 
-The cold first screen explains what the product does, names the intended adult
-relearner, and offers the visible one-click sample action. The sample opens a
-realistic isolated map with reset and start-for-real controls.
+The cold first screen answers what the product does, who it is for, and what to
+click first at 390 × 844 and 1440 × 900. The one-click sample opens a realistic
+isolated map with reset and start-for-real controls.
 
-Independent live checks passed for the complete create → connect → status →
-recommend → persist → export flow, empty and invalid input, cyclic-import
-recovery, keyboard-only use, 390 px and 200% text layouts, focus management,
-reduced motion, same-origin privacy, headers, cache policy, offline reload,
-service-worker replacement, links, 404 behavior, and deployment identity.
+Live checks passed for demo isolation/reset/exit, recommendation update,
+same-origin request privacy, metadata, links, 404 behavior, route focus and
+back navigation, and Axe scans at mobile and desktop sizes.
 
-Live Axe found zero violations on the landing, demo, board, privacy, and terms
-routes. Mobile Lighthouse scored 96 Performance, 100 Accessibility, 100 Best
-Practices, and 100 SEO (LCP 1.13 s, CLS 0). Initial JS is 33.36 kB raw / 10.81
-kB gzip; CSS is 18.93 kB raw / 5.15 kB gzip.
+Live Axe found zero violations on landing, demo, board, privacy, terms, and
+not-found routes at both tested viewport sizes.
 
-This is a static, local-first PWA with no sign-in, product API, payment,
-product-unlock, analytics, third-party runtime dependency, or AI call. Server
-rate-limit and Entra checks are not applicable.
+This remains a static, local-first PWA with no sign-in, product API, payment,
+analytics, third-party runtime dependency, or AI call.
 
 ## Defects and remaining work
 
@@ -51,4 +44,4 @@ rate-limit and Entra checks are not applicable.
 - Low: none.
 - Known gaps: none.
 
-No product code was modified during verification.
+No product code was modified during review.
