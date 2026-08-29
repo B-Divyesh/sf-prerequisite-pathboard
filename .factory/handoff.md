@@ -1,54 +1,44 @@
-# Verification 3 handoff — Prerequisite Pathboard
+# Review 4 handoff — Prerequisite Pathboard
 
 ## Outcome
 
-**PASS — candidate accepted.**
+**FAIL — follow-up product work is required.**
 
-- Tested commit: `1aae672a1eedc42c8ddc35768246a7a3fce7293e`
-- Tested URL: <https://prerequisite-pathboard.sociobot.in>
+- Reviewed commit: 2846858161bfdb426651af30493ed405d03b0ba8
+- Reviewed URL: https://prerequisite-pathboard.sociobot.in
 - Date: 2026-08-29 UTC
-- Product code changed during verification: no
-- Detailed report: `.factory/verification-3.md`
+- Product code changed: no
+- Detailed report: .factory/review-4.md
 
-Fresh byte comparison confirms that production matches the candidate build. The PWA completes the researched job end to end and passes the claims, first-read, accessibility, privacy, offline, response-policy, and performance gates.
+## Verified
 
-## Verification summary
+    fresh clean clone + npm ci       PASS
+    14 exact claims.json commands   PASS
+    CI=1 npm test -- --workers=1    PASS; 41 tests
+    npm run build                    PASS; dist/ produced
+    live Axe route/viewport matrix  PASS; zero violations
+    live demo, storage, requests    PASS
 
-```text
-npm ci                         PASS; 24 packages, 0 vulnerabilities
-all 14 claims.json commands   PASS
-npm test                       PASS; 41 tests
-npm run build                  PASS; TypeScript + Vite; dist/ produced
-npm audit --audit-level=high   PASS
-live/local deploy parity       PASS; all 19 compared files byte-identical
-live Lighthouse mobile        99 performance / 100 accessibility / 100 best practices / 100 SEO
-```
+The live product is one-click tryable, uses an isolated in-memory demo, resets
+it, keeps demo traffic same-origin, and passes every registered claim. Routing,
+404, metadata, link crawl, local/offline checks, and the documented visual
+identity also verify.
 
-The live demo is one click from the first screen, contains 14 realistic concepts, never opens real IndexedDB storage, resets cleanly, and restores the real map when exited. Independent live flows also passed creation, prerequisite entry, status/recommendation behavior, repair history, refresh/tab persistence, JSON export, cyclic-import rejection/recovery, 90-character title handling, keyboard use, 390 px layout, 200% text, reduced motion, and same-origin-only request logging.
+## Remaining defects
 
-The live service worker passed controlled offline reload, an uncached offline privacy navigation, cache-version cleanup, and its update notification. Security headers and immutable asset caching are present. This is a static, account-free PWA with no server endpoint or product-unlock call, so backend concurrency, Entra sign-in, and API 429 checks are not applicable.
-
-## Defects by severity
-
-- Critical: none.
-- High: none.
-- Medium: none.
-- Low: none.
-
-## Evidence
-
-- Report: `.factory/verification-3.md`
-- First-read screenshots: `/work/.evidence/prerequisite-pathboard-verify-3/live-cold-desktop.png` and `live-cold-mobile.png`
-- Mobile demo screenshot: `/work/.evidence/prerequisite-pathboard-verify-3/live-mobile-demo.png`
-- URL verifier: `/work/.evidence/prerequisite-pathboard-verify-3/verify-url/verify.json`
-- Lighthouse JSON: `/work/.evidence/prerequisite-pathboard-verify-3/lighthouse-live.json`
+1. **Blocking:** At 390 × 844, the third mandatory first-screen fact ends at
+   y=854. Shorten the mobile hero and add a mobile fact-placement test.
+2. **Blocking:** “not a prescribed course” is a visitor promise with no
+   claims.json entry/test. Remove it or register and prove it.
+3. **Minor:** The content-naming eyebrows are not the actual H2s in the
+   document outline.
+4. **Minor:** README calls dependencies “links” once.
 
 ## Run locally
 
-```sh
-npm ci
-npm test
-npm run build
-```
+    npm ci
+    npm test
+    npm run build
 
-No follow-up product work is required for this candidate.
+After implementing the four fixes, re-run the clean-clone claims matrix, the
+mobile first-screen measurement, and the route/Axe matrix.
