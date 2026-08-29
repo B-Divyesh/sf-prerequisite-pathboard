@@ -78,8 +78,15 @@ dist/assets/index-DJkPGc5X.css  18.92 kB (5.15 kB gzip)
 - Live root, demo, board, privacy, terms, and Param Factory links return 200.
   The CSP, HSTS, referrer, content-type, and permissions headers are recorded
   in `/work/.evidence/prerequisite-pathboard-polish-3/live-headers.txt`.
-- Local and live SHA-256 values match for `index.html`, the service worker,
-  current JS, and CSS. The live service worker reports `pathboard-v4-shell`.
+- Local and live SHA-256 values match. The live service worker reports
+  `pathboard-v4-shell`.
+
+  | Artifact | SHA-256 |
+  | --- | --- |
+  | `index.html` | `f0f9762794846b8488a10cf1547b97807754d8e9522850e754ca6711e6052b72` |
+  | `service-worker.js` | `9d2ca0c2423aca7ac4031190a6d1984a2871fe7774fb93328008de743fc7c3ee` |
+  | `assets/index-DQ3wDiKq.js` | `3227830a05b13f9d2d56e6897212a46036f8d667088fe0cf140c33de2ab0a3e0` |
+  | `assets/index-DJkPGc5X.css` | `def202c98250b28f92d6747e9f42544e7a083659c4e225a66fc201822fc0f263` |
 - Lighthouse mobile result for the live demo: Performance 100, Accessibility
   100, Best Practices 100, SEO 100; FCP 0.2 s, LCP 0.2 s, TBT 0 ms, CLS 0.
   JSON: `/work/.evidence/prerequisite-pathboard-polish-3/lighthouse-live-mobile.json`.
