@@ -26,7 +26,8 @@
 
 ## Verification
 
-Clean clone: `/tmp/prerequisite-pathboard-polish4.71XGhH`.
+Final clean clone: `/tmp/prerequisite-pathboard-polish4-final.uh7c8n` at
+`5bad214339b12d8d04bcf8560d5aa653942661d6`.
 
 ```text
 npm ci                                      PASS; 0 vulnerabilities
