@@ -88,7 +88,7 @@ test('@claim:markdown-export exports the map as readable Markdown', async ({ pag
   expect(content).toContain('needs Fraction arithmetic, Exponent laws');
 });
 
-test('@claim:dependency-recommendation updates from entered links and statuses', async ({ page }) => {
+test('@claim:dependency-recommendation updates from entered dependencies and statuses', async ({ page }) => {
   await page.goto('/demo');
   await expect(page.locator('#next-title')).toHaveText('Fraction arithmetic');
   await page.getByRole('button', { name: /^Fraction arithmetic, Not yet/ }).click();

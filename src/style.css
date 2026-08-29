@@ -222,8 +222,8 @@ code { color: var(--sky); }
   .site-header nav { gap: 8px; }
   .site-header nav a { min-width: 44px; min-height: 44px; justify-content: center; font-size: .82rem; }
   .network-state { display: none; }
-  .hero-copy { min-height: 600px; padding: 72px 20px; }
-  .hero-copy h1 { font-size: clamp(3rem, 15vw, 4.4rem); }
+  .hero-copy { min-height: 0; padding: 48px 20px 36px; }
+  .hero-copy h1 { font-size: clamp(2.85rem, 14vw, 3.9rem); }
   .hero-action { align-items: flex-start; flex-direction: column; }
   .hero-art { min-height: 490px; }
   .hero-art::after { background: linear-gradient(0deg, rgba(7,25,28,.55), transparent 60%); }

@@ -85,3 +85,12 @@ test('desktop first screen keeps all three facts in view', async ({ page }) => {
     expect(box && box.y >= 0 && box.y + box.height <= 900).toBe(true);
   }
 });
+
+test('390px first screen keeps all three facts in view', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  for (const item of await page.locator('.plain-facts li').all()) {
+    const box = await item.boundingBox();
+    expect(box && box.y >= 0 && box.y + box.height <= 844).toBe(true);
+  }
+});

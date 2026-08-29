@@ -1,6 +1,6 @@
 # Landing copy audit
 
-Audited August 29, 2026 for polish round 3. The first screen says what the
+Audited August 29, 2026 for polish round 4. The first screen says what the
 map does, who it is for, and what the sample action opens. Every landing and
 README copy unit is 22 words or fewer and avoids the banned words.
 
@@ -15,8 +15,7 @@ README copy unit is 22 words or fewer and avoids the banned words.
 | Works offline after the first visit. | 6 | Claim: `offline-reload` |
 | Your map stays on this device. | 6 | Claim: `local-only` |
 | Create multiple goals, track repairs, and export your map. | 9 | Claims: `multi-goal-map`, `repair-history`, exports |
-| Example prerequisite map | 3 | Pass: names the content |
-| A map you wrote, not a prescribed course | 8 | Pass |
+| Example prerequisite map | 3 | Pass: semantic section heading |
 | Every line comes from a dependency you enter. | 8 | Claim: `rendered-edges` |
 | Statuses help the map find the first unresolved step. | 9 | Claim: `dependency-recommendation` |
 | Build the map in three steps | 6 | Pass: names the process |
@@ -24,12 +23,12 @@ README copy unit is 22 words or fewer and avoids the banned words.
 | Write the exact idea or problem you want to handle. | 10 | Pass |
 | Add only the concepts your goal depends on. | 8 | Pass |
 | Update each status. The map points to one ready repair. | 10 | Claim: `dependency-recommendation` |
-| What the recommendation uses | 4 | Pass: names the content |
-| A reasoning aid for your own map | 7 | Pass |
+| What the recommendation uses | 4 | Pass: semantic section heading |
 | The recommendation uses only the dependencies and statuses you enter. | 10 | Claim: `dependency-recommendation` |
 | Export your map as JSON or Markdown. No account is required. | 9 / 4 | Claims: exports, `account-free` |
-| Included map features | 3 | Pass: names the content |
-| Works offline. Use the list view, repair history, and JSON or Markdown export. | 13 | Claims: offline, list, repairs, exports |
+| Included map features | 3 | Pass: semantic section heading |
+| Create multiple goals, track repairs, and export your map. | 9 | Claims: `multi-goal-map`, repairs, exports |
+| After one online visit, use the list view, repair history, and JSON or Markdown export. | 14 | Claims: offline, list, repairs, exports |
 | Your map remains local to this browser. | 7 | Claim: `local-only` |
 | Start your map / Export JSON or Markdown whenever you want a copy. | 3 / 9 | Pass: result-naming actions |
 | Prerequisite Pathboard / Map backward. Choose one repair. | 2 / 5 | Pass: footer |
@@ -43,7 +42,8 @@ Playwright, and the service worker remain in Develop, Test, or Build.
 | README text | Words | Result |
 | --- | ---: | --- |
 | Map prerequisites backward and choose the next concept to repair. | 10 | Pass |
-| The map recommends one ready concept from only those links and statuses. | 12 | Claim: `dependency-recommendation` |
+| The map recommends one ready concept from the dependencies and statuses you enter. | 12 | Claim: `dependency-recommendation` |
+| The recommendation follows only the dependencies you enter. | 8 | Claim: `dependency-recommendation` |
 | The demo loads a 14-concept calculus map. | 7 | Claim coverage: demo/export tests |
 | Its edits stay separate from your real map and disappear when you leave or reload. | 15 | Claim: `demo-sandbox` |
 | Create multiple goals, track repairs, and export your map. | 9 | Claims: `multi-goal-map`, repairs, exports |

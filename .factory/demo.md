@@ -1,7 +1,7 @@
 # Demo sandbox
 
 - URL: `https://prerequisite-pathboard.sociobot.in/?demo=1` (local: `http://localhost:5173/?demo=1`). The equivalent `/demo` route also works.
-- Sample: a 14-concept map for explaining derivatives, with 14 user-authored prerequisite links and five completed repairs.
+- Sample: a 14-concept map for explaining derivatives, with 14 user-authored dependencies and five completed repairs.
 - Expected first recommendation: **Fraction arithmetic**. Mark it “Can explain” and **Approaching a value** becomes next.
 - Reset: use **Reset demo** in the persistent demo banner.
 - Leave: use **Start for real**. Demo changes are discarded.

@@ -55,7 +55,7 @@ function footer(): string {
   return `<footer class="site-footer">
     <p><strong>Prerequisite Pathboard</strong><br><span>Map backward. Choose one repair.</span></p>
     <nav aria-label="Footer navigation"><a href="/privacy" data-nav>Privacy</a><a href="/terms" data-nav>Terms</a><a href="https://hello-factory.sociobot.in" target="_blank" rel="noreferrer">Built by Param Factory <span class="sr-only">(opens in a new tab)</span></a></nav>
-    <p class="build-id">Version 1.3 · Original generated artwork</p>
+    <p class="build-id">Version 1.4 · Original generated artwork</p>
   </footer>`;
 }
 
@@ -80,7 +80,7 @@ function landingPage(): string {
     </section>
 
     <section class="preview-section" aria-labelledby="preview-title">
-      <div class="section-heading"><p class="eyebrow">Example prerequisite map</p><h2 id="preview-title">A map you wrote, not a prescribed course</h2><p>Every line comes from a dependency you enter. Statuses help the map find the first unresolved step.</p></div>
+      <div class="section-heading"><h2 id="preview-title">Example prerequisite map</h2><p>Every line comes from a dependency you enter. Statuses help the map find the first unresolved step.</p></div>
       <div class="mini-board" role="group" aria-label="Example prerequisite path">
         <div class="mini-node ready">Fraction arithmetic <span>Not yet</span></div><span class="mini-edge" aria-hidden="true">→</span>
         <div class="mini-node">Algebraic simplification <span>Not yet</span></div><span class="mini-edge" aria-hidden="true">→</span>
@@ -93,9 +93,9 @@ function landingPage(): string {
       <ol><li><span>01</span><h3>Name the goal</h3><p>Write the exact idea or problem you want to handle.</p></li><li><span>02</span><h3>Work backward</h3><p>Add only the concepts your goal depends on.</p></li><li><span>03</span><h3>Mark and choose</h3><p>Update each status. The map points to one ready repair.</p></li></ol>
     </section>
 
-    <section class="limits" aria-labelledby="limits-title"><div><p class="eyebrow">What the recommendation uses</p><h2 id="limits-title">A reasoning aid for your own map</h2></div><div><p>The recommendation uses only the dependencies and statuses you enter.</p><p>Export your map as JSON or Markdown. No account is required.</p></div></section>
+    <section class="limits" aria-labelledby="limits-title"><div><h2 id="limits-title">What the recommendation uses</h2></div><div><p>The recommendation uses only the dependencies and statuses you enter.</p><p>Export your map as JSON or Markdown. No account is required.</p></div></section>
 
-    <section class="pricing" aria-labelledby="pricing-title"><div><p class="eyebrow">Included map features</p><h2 id="pricing-title">Create multiple goals, track repairs, and export your map</h2><p>Works offline. Use the list view, repair history, and JSON or Markdown export.</p></div><div class="price-panel"><p>Your map remains local to this browser.</p><a class="button primary" href="/board" data-nav>Start your map</a><small>Export JSON or Markdown whenever you want a copy.</small></div></section>
+    <section class="pricing" aria-labelledby="pricing-title"><div><h2 id="pricing-title">Included map features</h2><p>Create multiple goals, track repairs, and export your map.</p><p>After one online visit, use the list view, repair history, and JSON or Markdown export.</p></div><div class="price-panel"><p>Your map remains local to this browser.</p><a class="button primary" href="/board" data-nav>Start your map</a><small>Export JSON or Markdown whenever you want a copy.</small></div></section>
   </main>`);
 }
 
@@ -110,7 +110,7 @@ function appPage(): string {
   const next = recommendation(state, goal?.id ?? null);
   return shell(`${isDemo ? demoBanner() : ''}<main id="main" class="workspace">
     <section class="workspace-head">
-      <div><p class="eyebrow">${isDemo ? 'Sample calculus map' : 'Your local map'}</p><h1 tabindex="-1">Choose the next concept to repair</h1><p>Map the prerequisites yourself. The recommendation follows only those links.</p></div>
+      <div><p class="eyebrow">${isDemo ? 'Sample calculus map' : 'Your local map'}</p><h1 tabindex="-1">Choose the next concept to repair</h1><p>Map the prerequisites yourself. The recommendation follows only the dependencies you enter.</p></div>
       <div class="workspace-actions"><button class="button primary" type="button" data-add-goal>Add goal</button><button class="button secondary" type="button" data-export-menu>Export map</button><label class="button secondary file-button">Import JSON<input type="file" accept="application/json,.json" data-import></label></div>
     </section>
     ${storageError ? `<div class="error-banner" role="alert">${esc(storageError)} Changes will stay on this screen. Export JSON before closing it.</div>` : ''}
@@ -204,7 +204,7 @@ function privacyPage(): string {
 }
 
 function termsPage(): string {
-  return shell(`<main id="main" class="prose-page"><p class="eyebrow">Terms</p><h1 tabindex="-1">Use the map as a planning aid</h1><p class="lede">Prerequisite Pathboard helps you record your own learning dependencies.</p><h2>Using the product</h2><p>You are responsible for the concepts and links you enter. Keep exports if the map matters to you. Browser data can be lost when storage is cleared.</p><h2>Availability</h2><p>The software is provided as is, without a guarantee of uninterrupted availability. You retain ownership of the map you create.</p><p>Effective: August 28, 2026. Questions: <a href="mailto:support@sociobot.in">support@sociobot.in</a></p></main>`);
+  return shell(`<main id="main" class="prose-page"><p class="eyebrow">Terms</p><h1 tabindex="-1">Use the map as a planning aid</h1><p class="lede">Prerequisite Pathboard helps you record your own learning dependencies.</p><h2>Using the product</h2><p>You are responsible for the concepts and dependencies you enter. Keep exports if the map matters to you. Browser data can be lost when storage is cleared.</p><h2>Availability</h2><p>The software is provided as is, without a guarantee of uninterrupted availability. You retain ownership of the map you create.</p><p>Effective: August 28, 2026. Questions: <a href="mailto:support@sociobot.in">support@sociobot.in</a></p></main>`);
 }
 
 function notFoundPage(): string {

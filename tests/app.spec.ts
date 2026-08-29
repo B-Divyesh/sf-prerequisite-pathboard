@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { readFile } from 'node:fs/promises';
 import AxeBuilder from '@axe-core/playwright';
 
 test('@claim:refresh-persistence real board survives refresh and tab close', async ({ page, context }) => {
@@ -82,6 +83,23 @@ test('the first-screen demo action opens the isolated query-string demo and rese
   await expect(page.getByRole('button', { name: 'Reset demo' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Start for real' })).toBeVisible();
   await expect(page.locator('#next-title')).toHaveText('Fraction arithmetic');
+});
+
+test('landing section headings name their content and omit the unsupported course promise', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { level: 2 })).toHaveText([
+    'Example prerequisite map',
+    'Build the map in three steps',
+    'What the recommendation uses',
+    'Included map features'
+  ]);
+  await expect(page.getByText(/prescribed course/i)).toHaveCount(0);
+});
+
+test('README uses dependencies as the one relationship term', async () => {
+  const readme = await readFile('README.md', 'utf8');
+  expect(readme).toContain('The map recommends one ready concept from the dependencies and statuses you enter.');
+  expect(readme).not.toContain('only those links and statuses');
 });
 
 test('invalid import gives one clear recovery step', async ({ page }) => {

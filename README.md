@@ -2,7 +2,7 @@
 
 Map prerequisites backward and choose the next concept to repair.
 
-Prerequisite Pathboard is for adults rebuilding a technical subject. You add a goal, connect the ideas it depends on, and mark each concept as **Not yet**, **Can explain**, or **Can solve**. The map recommends one ready concept from only those links and statuses.
+Prerequisite Pathboard is for adults rebuilding a technical subject. You add a goal, connect the ideas it depends on, and mark each concept as **Not yet**, **Can explain**, or **Can solve**. The map recommends one ready concept from the dependencies and statuses you enter.
 
 Live site: <https://prerequisite-pathboard.sociobot.in>
 
